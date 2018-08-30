@@ -122,8 +122,7 @@ DoubleConstants = {FloatNumbers} | {ExponentialNumbers}
 
 // Strings Constants
 StringConstants = (\"([^\n\\\"]|\\.)*\")
-MultiLineStringError = (\"([^\n\"])*)(\n)
-UnrecognizedCharacters = (\")(\r\n)
+UnrecognizedCharacters = (\")
 
 // Operators and punctuation characters
 Operators = ("+")|("-")|("*")|("/")|("%")|("<")|("<=")|(">")|(">=")|("=")|("==")|("!=")|("&&")|("||")
@@ -146,5 +145,4 @@ PunctuationCharacters = ("!")|(";")|(",")|(".")|("(")|(")")|("[")|("]")|("{")|("
 {PunctuationCharacters}     {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false);}
 
 .                           {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "Unrecognized char", true)); return new Yytoken(yytext(), yyline, yycolumn, "Unrecognized char", true);}
-{MultiLineCommentError}     {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "The character '*/' can not be found", true)); return new Yytoken(yytext(), yyline, yycolumn, "The character '*/' can not be found", true);}
-{MultiLineStringError}      {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "The closing character '\"' was not found", true)); return new Yytoken(yytext(), yyline, yycolumn, "The closing character '\"' was not found", true);}
+{MultiLineCommentError}     { /* ignore */ }
