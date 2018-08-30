@@ -17,7 +17,7 @@ class Yytoken{
 
     Yytoken(String token, int line, int column, String type, boolean error){
         this.token = token;
-        this.line = line;
+        this.line = line+1;
         this.column = column+1;
         this.length = token.length()-1;
         this.type = type;
@@ -104,12 +104,12 @@ public class LexicalScanner {
     "\1\0\1\1\2\2\1\1\5\2\1\1\6\2\3\3"+
     "\2\4\2\5\1\4\1\1\1\4\2\1\3\4\1\2"+
     "\1\0\1\6\1\0\11\2\1\0\6\2\1\6\2\2"+
-    "\2\3\1\7\3\0\1\10\2\0\1\2\1\6\1\0"+
-    "\2\2\1\6\1\2\1\0\2\2\1\0\2\2\1\0"+
-    "\3\2\1\0\1\2\1\6\2\2\3\0\1\5\3\0"+
-    "\1\2\1\11\2\2\1\0\1\2\1\0\3\2\1\7"+
-    "\3\0\2\2\1\0\1\2\1\11\3\2\2\0\3\2"+
-    "\2\0\3\2\1\0\1\2";
+    "\1\3\1\7\1\10\3\0\1\11\2\0\1\2\1\6"+
+    "\1\0\2\2\1\6\1\2\1\0\2\2\1\0\2\2"+
+    "\1\0\3\2\1\0\1\2\1\6\2\2\3\0\1\5"+
+    "\3\0\1\2\1\12\2\2\1\0\1\2\1\0\3\2"+
+    "\1\10\3\0\2\2\1\0\1\2\1\12\3\2\2\0"+
+    "\3\2\2\0\3\2\1\0\1\2";
 
   private static int [] zzUnpackAction() {
     int [] result = new int[127];
@@ -819,39 +819,43 @@ private String isError(String token, int line, int column, int length, String er
           case 1: 
             { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "Unrecognized char", true)); return new Yytoken(yytext(), yyline, yycolumn, "Unrecognized char", true);
             }
-          case 10: break;
+          case 11: break;
           case 2: 
             { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "T_Identifier", false)); return new Yytoken(yytext(), yyline, yycolumn, "T_Identifier", false);
             }
-          case 11: break;
+          case 12: break;
           case 3: 
             { /* ignore */
             }
-          case 12: break;
+          case 13: break;
           case 4: 
             { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false);
             }
-          case 13: break;
+          case 14: break;
           case 5: 
             { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeNumbers(yytext(), "T_IntConstant"), false)); return new Yytoken(yytext(), yyline, yycolumn, this.typeNumbers(yytext(), "T_IntConstant"), false);
             }
-          case 14: break;
+          case 15: break;
           case 6: 
             { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false);
             }
-          case 15: break;
-          case 7: 
-            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeNumbers(yytext(), "T_DoubleConstant"), false)); return new Yytoken(yytext(), yyline, yycolumn, this.typeNumbers(yytext(), "T_DoubleConstant"), false);
-            }
           case 16: break;
-          case 8: 
-            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeNumbers(yytext(), "T_String"), false)); return new Yytoken(yytext(), yyline, yycolumn, this.typeNumbers(yytext(), "T_String"), false);
+          case 7: 
+            { this.tokens.add(new Yytoken("", yyline, yycolumn, "The character '*/' wasn't found", true)); return new Yytoken("", yyline, yycolumn, "The character '*/' wasn't found", true);
             }
           case 17: break;
-          case 9: 
-            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "T_LogicalConstant", false)); return new Yytoken(yytext(), yyline, yycolumn, "T_LogicalConstant", false);
+          case 8: 
+            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeNumbers(yytext(), "T_DoubleConstant"), false)); return new Yytoken(yytext(), yyline, yycolumn, this.typeNumbers(yytext(), "T_DoubleConstant"), false);
             }
           case 18: break;
+          case 9: 
+            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeNumbers(yytext(), "T_String"), false)); return new Yytoken(yytext(), yyline, yycolumn, this.typeNumbers(yytext(), "T_String"), false);
+            }
+          case 19: break;
+          case 10: 
+            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "T_LogicalConstant", false)); return new Yytoken(yytext(), yyline, yycolumn, "T_LogicalConstant", false);
+            }
+          case 20: break;
           default:
             zzScanError(ZZ_NO_MATCH);
         }

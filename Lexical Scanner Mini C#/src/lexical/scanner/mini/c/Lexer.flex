@@ -15,7 +15,7 @@ class Yytoken{
 
     Yytoken(String token, int line, int column, String type, boolean error){
         this.token = token;
-        this.line = line;
+        this.line = line+1;
         this.column = column+1;
         this.length = token.length()-1;
         this.type = type;
@@ -145,4 +145,4 @@ PunctuationCharacters = ("!")|(";")|(",")|(".")|("(")|(")")|("[")|("]")|("{")|("
 {PunctuationCharacters}     {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false);}
 
 .                           {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "Unrecognized char", true)); return new Yytoken(yytext(), yyline, yycolumn, "Unrecognized char", true);}
-{MultiLineCommentError}     { /* ignore */ }
+{MultiLineCommentError}     {this.tokens.add(new Yytoken("", yyline, yycolumn, "The character '*/' wasn't found", true)); return new Yytoken("", yyline, yycolumn, "The character '*/' wasn't found", true);}
