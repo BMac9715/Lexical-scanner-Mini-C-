@@ -71,7 +71,7 @@ private String typeReservedWords(String text){
 }
 
 private String typeNumbers(String text, String type){
-    return type + "(value = " + text + ")";
+    return type + " (value = " + text + ")";
 }
 
 private String isError(String token, int line, int column, int length, String error){
@@ -141,7 +141,7 @@ PunctuationCharacters = ("!")|(";")|(",")|(".")|("(")|(")")|("[")|("]")|("{")|("
 {Comments}                  { /* ignore */ }
 {IntegerConstants}          {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeNumbers(yytext(), "T_IntConstant"), false)); return new Yytoken(yytext(), yyline, yycolumn, this.typeNumbers(yytext(), "T_IntConstant"), false);}
 {DoubleConstants}           {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeNumbers(yytext(), "T_DoubleConstant"), false)); return new Yytoken(yytext(), yyline, yycolumn, this.typeNumbers(yytext(), "T_DoubleConstant"), false);}
-{StringConstants}           {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "T_String", false)); return new Yytoken(yytext(), yyline, yycolumn, "T_String", false);}
+{StringConstants}           {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeNumbers(yytext(), "T_String"), false)); return new Yytoken(yytext(), yyline, yycolumn, this.typeNumbers(yytext(), "T_String"), false);}
 {Operators}                 {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false);}
 {PunctuationCharacters}     {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false);}
 

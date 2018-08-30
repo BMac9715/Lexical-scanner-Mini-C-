@@ -438,7 +438,7 @@ private String typeReservedWords(String text){
 }
 
 private String typeNumbers(String text, String type){
-    return type + "(value = " + text + ")";
+    return type + " (value = " + text + ")";
 }
 
 private String isError(String token, int line, int column, int length, String error){
@@ -858,7 +858,7 @@ private String isError(String token, int line, int column, int length, String er
             }
           case 20: break;
           case 10: 
-            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "T_String", false)); return new Yytoken(yytext(), yyline, yycolumn, "T_String", false);
+            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeNumbers(yytext(), "T_String"), false)); return new Yytoken(yytext(), yyline, yycolumn, this.typeNumbers(yytext(), "T_String"), false);
             }
           case 21: break;
           case 11: 
