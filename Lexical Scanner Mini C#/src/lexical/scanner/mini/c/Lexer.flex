@@ -41,7 +41,7 @@ class Yytoken{
 
     public String isError(){
         int aux = column + length;
-        return "*** Line " +line+ " *** Cols "+column+"-"+aux+" *** " + type + ": '" + token +"'";
+        return "*** Error Line " +line+ "\n*** Cols "+column+"-"+aux+" *** " + type + ": '" + token +"'";
     }
 }
 
@@ -98,8 +98,8 @@ WhiteSpace     = {LineTerminator}|{Space}
 /* Comments */
 InputCharacter   = [^\r\n]
 
-MultiLineComment = ("/*" [^*] ~"*/")| ("/*" "*"+ "/")
-MultiLineCommentError = ["/*"]~(\n)
+MultiLineComment = ("/*"~"*/")
+MultiLineCommentError = ("/*")([^"*/"])*
 LineComment = ("//"){InputCharacter}*{LineTerminator}?
 
 Comments = {MultiLineComment} | {LineComment}
@@ -121,7 +121,9 @@ ExponentialNumbers = ([+-]?)({FloatNumbers})([eE][+-]?)({Digits})
 DoubleConstants = {FloatNumbers} | {ExponentialNumbers}
 
 // Strings Constants
-StringConstants = (\"([^\"\\]|\\.)*\")
+StringConstants = (\"([^\n\\\"]|\\.)*\")
+MultiLineStringError = (\"([^\n\"])*)(\n)
+UnrecognizedCharacters = (\")(\r\n)
 
 // Operators and punctuation characters
 Operators = ("+")|("-")|("*")|("/")|("%")|("<")|("<=")|(">")|(">=")|("=")|("==")|("!=")|("&&")|("||")
@@ -131,6 +133,7 @@ PunctuationCharacters = ("!")|(";")|(",")|(".")|("(")|(")")|("[")|("]")|("{")|("
 
 /* Lexical rules */
 
+{UnrecognizedCharacters}    {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "Unrecognized char", true)); return new Yytoken(yytext(), yyline, yycolumn, "Unrecognized char", true);}
 {ReservedWords}             {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false);}
 {LogicalConstants}          {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "T_LogicalConstant", false)); return new Yytoken(yytext(), yyline, yycolumn, "T_LogicalConstant", false);}
 {Identifiers}               {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "T_Identifier", false)); return new Yytoken(yytext(), yyline, yycolumn, "T_Identifier", false);}
@@ -142,5 +145,6 @@ PunctuationCharacters = ("!")|(";")|(",")|(".")|("(")|(")")|("[")|("]")|("{")|("
 {Operators}                 {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false);}
 {PunctuationCharacters}     {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false);}
 
-{MultiLineCommentError}     {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "The character '*/' can not be found", true)); return new Yytoken(yytext(), yyline, yycolumn, "The character '*/' can not be found", true);}
 .                           {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "Unrecognized char", true)); return new Yytoken(yytext(), yyline, yycolumn, "Unrecognized char", true);}
+{MultiLineCommentError}     {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "The character '*/' can not be found", true)); return new Yytoken(yytext(), yyline, yycolumn, "The character '*/' can not be found", true);}
+{MultiLineStringError}      {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "The closing character '\"' was not found", true)); return new Yytoken(yytext(), yyline, yycolumn, "The closing character '\"' was not found", true);}
