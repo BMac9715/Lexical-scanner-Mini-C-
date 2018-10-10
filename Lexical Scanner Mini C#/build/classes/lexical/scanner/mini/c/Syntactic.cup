@@ -1,0 +1,219 @@
+package lexical.scanner.mini.c;
+
+//Java Libraries
+import java.util.ArrayList;
+import java_cup.runtime.Symbol;
+
+parser code {:
+    public static ArrayList<String> SyntacticErrors = new ArrayList<String>();
+    public int count = 0;
+
+    public void syntax_error(Symbol cur_token){
+        System.out.println("Error Sintactico. Linea: " + (cur_token.right + 1) + " Columna: " + (cur_token.left) + ". Simbolo: " + cur_token.value.toString() + " no reconocido.");
+        SyntacticErrors.add("Error Sintactico. Linea: " + (cur_token.right + 1) + " Columna: " + (cur_token.left) + ". Simbolo: " + cur_token.value.toString() + " no reconocido.");
+    }
+
+    public void unrecovered_syntax_error(Symbol cur_token){
+        System.out.println("Error Sintactico No Recuperado. Linea: " + (cur_token.right + 1) + " Columna: " + (cur_token.left) + ". Simbolo: " + cur_token.value.toString() + " no reconocido.");
+        SyntacticErrors.add("Error Sintactico No Recuperado. Linea: " + (cur_token.right + 1) + " Columna: " + (cur_token.left) + ". Simbolo: " + cur_token.value.toString() + " no reconocido.");
+    }
+:}
+
+/*  Symbol Lists  */
+
+// Terminals
+terminal OpeningParenthesis, ClosedParenthesis, Parenthesis, OpeningBracket, ClosedBracket, Brackets, OpeningCurlyBracket, ClosedCurlyBracket, CurlyBrackets, pyc, comma, dot;
+terminal String types, sNull, lFor, lWhile, cIf, cElse, sVoid, sClass, sInterface, sExtends, sThis, sPrint, sImplements, sNewArray, sNew, sReadInteger, sReadLine, sMalloc, sGetByte, sSetByte, sReturn, sBreak;      
+terminal String ArithmeticOperators, ComparisonOperators, negative, assignment, denial, and, or, sum, equality;
+terminal String stringConstant, ident;
+terminal Boolean boolConstant;
+terminal Integer integerConstant;
+terminal Double doubleConstant;
+
+// Non Terminals
+non terminal String Program, ProgramA;
+non terminal String Decl;
+non terminal String VariableDecl, VariableDeclAux;
+non terminal String Variable;
+non terminal String Type;
+non terminal String FunctionDecl;
+non terminal String Formals, RepeatVariable;
+non terminal String ClassDecl, ExtIdent, ImpIdent, MultipleIdents;
+non terminal String Field;
+non terminal String InterfaceDecl;
+non terminal String Prototype;
+non terminal String StmtBlock;
+non terminal String Stmt, StmtAux;
+non terminal String IfStmt, ElseStmt;
+non terminal String WhileStmt;
+non terminal String ForStmt;
+non terminal String ReturnStmt;
+non terminal String BreakStmt;
+non terminal String PrintStmt;
+non terminal String Expr, ExprOZ, ExprRepeat;
+non terminal String LValue;
+non terminal String Call;
+non terminal String LibCall;
+non terminal String Actuals;
+non terminal String Constant;
+
+/*  Precedence and Associativity declarations   */
+precedence nonassoc assignment;
+precedence left or;
+precedence left and;
+precedence left equality;
+precedence nonassoc ComparisonOperators;
+precedence left sum, negative;
+precedence left ArithmeticOperators;
+precedence left denial, negative;
+precedence left OpeningBracket, dot;
+
+/* Grammar */
+start with Program;
+
+//Program ::= Decl+
+Program ::= Decl ProgramA   {::};
+ProgramA ::= Decl ProgramA  {::}
+            | /* epsilon */ ;
+
+//Decl ::= VariableDecl | FunctionDecl | ClassDecl | InterfaceDecl
+Decl ::=  VariableDecl {::}
+        | FunctionDecl {::}
+        | ClassDecl {::}
+        | InterfaceDecl {::}
+        | error pyc
+        | error ClosedCurlyBracket ;
+
+//VariableDecl ::= Variable;
+VariableDecl ::= Variable pyc {::};
+
+//Variable ::= Type ident
+Variable ::= Type ident {::};
+
+//Type ::= int | double | bool | string | ident | Type []
+Type ::=  types {::}
+        | Type Brackets {::};
+
+//FunctionDecl ::= Type ident (Formals) StmtBlock | void ident (Formals) StmtBlock
+FunctionDecl ::=  Type ident OpeningParenthesis Formals ClosedParenthesis StmtBlock {::}
+                | sVoid ident OpeningParenthesis Formals ClosedParenthesis StmtBlock {::};
+
+//Formals ::= Variable+, | epsilon
+Formals ::= Variable RepeatVariable {::}
+            | /* epsilon */ ;
+RepeatVariable ::= comma Variable RepeatVariable {::}
+                | /* epsilon */ ;
+
+//ClassDecl     ::=    class ident <extends ident> <implements ident+,> { Field* }
+ClassDecl ::= sClass ident ExtIdent ImpIdent OpeningCurlyBracket Field ClosedCurlyBracket {::};
+
+ExtIdent ::= sExtends ident {::}
+            | /* epsilon */ ;
+
+ImpIdent ::= sImplements ident MultipleIdents {::}
+            | /* epsilon */ ;
+
+MultipleIdents ::= comma ident MultipleIdents {::}
+                | /* epsilon */ ;
+                
+//Field ::= VariableDecl Field | FunctionDecl Field | /* epsilon */
+Field ::= VariableDecl Field {::}
+        | FunctionDecl Field {::}
+        | /* epsilon */ ;
+//InterfaceDecl ::= interface ident { Prototype* }
+InterfaceDecl ::= sInterface ident OpeningCurlyBracket Prototype ClosedCurlyBracket {::};
+
+//Prototype ::= Type ident ( Formals ) ; | void ident ( Formals ) ;
+Prototype ::= Type ident OpeningParenthesis Formals ClosedParenthesis pyc Prototype {::}
+            | sVoid ident OpeningParenthesis Formals ClosedParenthesis pyc Prototype {::}
+            | /* epsilon */ ;
+
+//StmtBlock ::= { VariableDecl* Stmt* }
+StmtBlock ::= OpeningCurlyBracket VariableDeclAux StmtAux ClosedCurlyBracket {::};
+
+VariableDeclAux ::= VariableDecl VariableDeclAux {::}
+                | /* epsilon */ ;
+
+StmtAux ::= Stmt StmtAux {::}
+            | /* epsilon */ ;
+//Stmt ::= <Expr>; | IfStmt | WhileStmt | ForStmt | BreakStmt | ReturnStmt | PrintStmt | StmtBlock
+Stmt ::= ExprOZ pyc {::}
+        | IfStmt {::}
+        | WhileStmt {::}
+        | ForStmt {::}
+        | BreakStmt {::}
+        | ReturnStmt {::}
+        | PrintStmt {::}
+        | StmtBlock {::};
+
+ExprOZ ::= Expr {::}
+        | /* epsilon */ ;
+
+//IfStmt := if ( Expr ) Stmt <else Stmt>
+IfStmt ::= cIf OpeningParenthesis Expr ClosedParenthesis ElseStmt {::};
+
+ElseStmt ::= cElse Stmt {::}
+            | /* epsilon */ ;
+
+//WhileStmt ::= while ( Expr ) Stmt
+WhileStmt ::= lWhile OpeningParenthesis Expr ClosedParenthesis Stmt {::};
+
+//ForStmt ::= for ( <Expr>; <Expr> ; <Expr> ) Stmt
+ForStmt ::= lFor OpeningParenthesis ExprOZ pyc  ExprOZ pyc ExprOZ ClosedParenthesis Stmt {::};
+
+//ReturnStmt ::= return <Expr> ;
+ReturnStmt ::= sReturn ExprOZ pyc {::};
+
+//BreakStmt ::= break;
+BreakStmt ::= sBreak pyc {::};
+
+//PrintStmt ::= Print ( Expr+, ) ;
+PrintStmt ::= sPrint OpeningParenthesis Expr ExprRepeat ClosedParenthesis pyc {::};
+ExprRepeat ::= comma Expr ExprRepeat {::}
+             | /* epsilon */ ;
+
+//Expr ::= LValue = Expr | Constant | LValue | this | Call | ( Expr ) | Expr + Expr | Expr - Expr | Expr * Expr | Expr / Expr | Expr % Expr | - Expr | Expr < Expr | Expr <= Expr | Expr > Expr | Expr >= Expr | Expr == Expr | Expr != Expr | Expr && Expr | Expr || Expr | !Expr | ReadInteger ( ) | ReadLine ( ) | New ( ident ) | NewArray ( Expr , Type )
+Expr ::= LValue assignment Expr {::}
+        | Constant {::}
+        | LValue {::}
+        | sThis {::}
+        | Call {::}
+        | OpeningParenthesis Expr ClosedParenthesis {::}
+        | Expr sum Expr {::}
+        | Expr negative Expr {::}
+        | Expr ArithmeticOperators Expr {::}
+        | negative Expr {::}
+        | Expr ComparisonOperators Expr {::}
+        | Expr equality Expr {::}
+        | Expr and Expr {::}
+        | Expr or Expr {::}
+        | denial Expr {::}
+        | sNew OpeningParenthesis ident ClosedParenthesis {::}
+        | sNewArray OpeningParenthesis Expr comma Type ClosedParenthesis {::}
+        | sReadInteger Parenthesis {::}
+        | sReadLine Parenthesis {::}
+        | sMalloc OpeningParenthesis Expr ClosedParenthesis {::};
+
+//LValue ::= ident | Expr . ident | Expr [ Expr ]
+LValue ::= ident {::}
+        | Expr dot ident {::}
+        | Expr OpeningBracket Expr ClosedBracket {::};
+//Call ::= ident ( Actuals ) | Expr . ident ( Actuals ) | Expr . LibCall ( Actuals )
+Call ::= ident OpeningParenthesis Actuals ClosedParenthesis {::}
+        | Expr dot ident OpeningParenthesis Actuals ClosedParenthesis {::}
+        | Expr dot LibCall OpeningParenthesis Actuals ClosedParenthesis {::};
+
+//LibCall ::= GetByte(Expr) | SetByte(Expr, Expr)
+LibCall ::= sGetByte OpeningParenthesis Expr ClosedParenthesis {::}
+            | sSetByte OpeningParenthesis Expr comma Expr ClosedParenthesis {::};
+
+//Actuals ::= Expr+, |epsilon
+Actuals ::= Expr ExprRepeat {::}
+            | /* epsilon */ ;
+
+//Constant ::= intConstant | doubleConstant | boolConstant | stringConstant | null
+Constant ::= integerConstant {::}
+            | doubleConstant {::}
+            | boolConstant {::}
+            | stringConstant {::}
+            | sNull {::};
