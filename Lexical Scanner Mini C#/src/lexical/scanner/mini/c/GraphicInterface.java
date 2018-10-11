@@ -1,6 +1,7 @@
 
 package lexical.scanner.mini.c;
 
+import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -128,22 +129,21 @@ public class GraphicInterface extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jLabel3)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(jLabel1))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(9, 9, 9)
-                                        .addComponent(btnCompileLexer, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(37, 37, 37)
-                                        .addComponent(btnUploadFile, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addGap(38, 38, 38)
+                                        .addGap(9, 9, 9)
+                                        .addComponent(btnCompileLexer, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(jLabel3))
+                                .addGap(38, 38, 38)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel1)
+                                    .addComponent(btnUploadFile, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(56, 56, 56)
                                         .addComponent(btnAnalize, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGroup(layout.createSequentialGroup()
-                                        .addGap(59, 59, 59)
+                                        .addGap(74, 74, 74)
                                         .addComponent(jLabel2))))))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(48, 48, 48)
@@ -339,52 +339,64 @@ public class GraphicInterface extends javax.swing.JFrame {
     }//GEN-LAST:event_btnCompileLexerActionPerformed
 
     private void btnAnalizeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnalizeActionPerformed
-        /*
-        ArrayList<Yytoken> tokens = null;
         
-        //Upload file of the path
+        ArrayList<Yytoken> lexicalErrors = null;
+        ArrayList<String> syntacticErrors = null;
+        
         BufferedReader reader = null;
+        
         try {
-            //Ruta del archivo especificado por el usuario
             reader = new BufferedReader(new FileReader(path));
             LexicalScanner lexer = new LexicalScanner(reader);
+            SyntacticAnalyzer parser = new SyntacticAnalyzer(lexer);
+            parser.parse();
             
-            Yytoken token = null;
+            lexicalErrors = lexer.tokens;
+            syntacticErrors = parser.SyntacticErrors;
             
-            while(true){
-                token = lexer.nextToken();
-                
-                if(token==null){
-                    break;
-                }else{
-                    System.out.println(token.toString());
-                }
-            }          
-            tokens = lexer.tokens;
             reader.close();
             
             String content = "";
             
-            //Put result on display
-            for(Yytoken element: tokens){
+            //Put errors on display
+            //Lexical Errors
+            for(Yytoken element: lexicalErrors){
                 if(element.error){
                     content += element.isError() + "\r\n";
                 }
-                else{
-                    content += element.toString() + "\r\n";
-                }
             }
             
-            tAFileOut.setText(content);
-            tAFileOut.setCaretPosition(0);
-            btnAnalize.setEnabled(false);
+            //Syntactic Errors
+            for(String element: syntacticErrors){
+                content += element + "\r\n";
+            }
             
+            if((lexicalErrors.size() == 0) &&(syntacticErrors.size() == 0)){
+                content = "*** Archivo sin errores léxicos o sintácticos ***";
+                tAFileOut.setForeground(Color.GREEN);
+                tAFileOut.setText(content);      
+                tAFileOut.setCaretPosition(0);
+                btnAnalize.setEnabled(false);
+                
+                JOptionPane.showMessageDialog(null,
+                "El archivo analizado es léxicamente y sintácticamente correcto.",
+                "Aviso",JOptionPane.INFORMATION_MESSAGE);       
+            }
+            else{
+                tAFileOut.setForeground(Color.RED);
+                tAFileOut.setText(content);      
+                tAFileOut.setCaretPosition(0);
+                btnAnalize.setEnabled(false);
+                
+                JOptionPane.showMessageDialog(null,
+                "El archivo contiene errores, el detalle de los errores se muestra en pantalla.",
+                "Aviso",JOptionPane.INFORMATION_MESSAGE);
+            }     
         } catch (FileNotFoundException ex) {
             Logger.getLogger(GraphicInterface.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             Logger.getLogger(GraphicInterface.class.getName()).log(Level.SEVERE, null, ex);
         }
-        */
     }//GEN-LAST:event_btnAnalizeActionPerformed
 
     private void btnCleanTextsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCleanTextsActionPerformed

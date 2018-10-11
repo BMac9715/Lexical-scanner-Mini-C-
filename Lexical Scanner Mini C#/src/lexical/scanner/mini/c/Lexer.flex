@@ -42,14 +42,13 @@ class Yytoken{
 
     public String isError(){
         int aux = column + length;
-        return "*** Error Line " +line+ "\n*** Cols "+column+"-"+aux+" *** " + type + ": '" + token +"'";
+        return "*** Error Léxico. Linea: " +line+ " Columnas: "+column+"-"+aux+" *** Mensaje Error: " + type + " \'" + token +"\'";
     }
 }
 
 %%
 /* Options and declarations */
 %class LexicalScanner
-%cupsym sym
 %cup
 %public
 %unicode
@@ -65,6 +64,14 @@ this.tokens = new ArrayList<Yytoken>();
 %init}
 
 %{
+
+private Symbol symbol(int type){
+    return new Symbol(type, yyline, yycolumn, yytext());
+}
+
+private Symbol symbol(int type, Object value){
+    return new Symbol(type, yyline, yycolumn, value);
+}
 
 public ArrayList<Yytoken> tokens; /* our variable for storing token's info that will be the output */
 
@@ -86,7 +93,10 @@ private String isError(String token, int line, int column, int length, String er
 /*Macro Definition*/
 
 /* Reserved words */
-Types = ("int")|("double")|("bool")|("string")
+Int = ("int")
+Double = ("double")
+Bool = ("bool")
+String = ("string")
 Null = ("null")
 For = ("for")
 While = ("while")
@@ -178,56 +188,59 @@ Dot= (".")
 
 {UnrecognizedCharacters}    {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "Unrecognized char", true)); /* It's error so it doesn't return nothing */}
 /*  Reserved Words  */
-{Types}                     {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return new Symbol(sym.types, yyline, yycolumn, yytext());}
-{Null}                      {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return new Symbol(sym.sNull, yyline, yycolumn, yytext());}
-{For}                       {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return new Symbol(sym.lFor, yyline, yycolumn, yytext());}
-{While}                     {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return new Symbol(sym.lWhile, yyline, yycolumn, yytext());}
-{If}                        {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return new Symbol(sym.cIf, yyline, yycolumn, yytext());}
-{Else}                      {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return new Symbol(sym.cElse, yyline, yycolumn, yytext());}
-{Void}                      {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return new Symbol(sym.sVoid, yyline, yycolumn, yytext());}
-{Class}                     {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return new Symbol(sym.sClass, yyline, yycolumn, yytext());}
-{Interface}                 {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return new Symbol(sym.sInterface, yyline, yycolumn, yytext());}
-{Extends}                   {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return new Symbol(sym.sExtends, yyline, yycolumn, yytext());}
-{This}                      {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return new Symbol(sym.sThis, yyline, yycolumn, yytext());}
-{Print}                     {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return new Symbol(sym.sPrint, yyline, yycolumn, yytext());}    
-{Implements}                {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return new Symbol(sym.sImplements, yyline, yycolumn, yytext());}
-{NewArray}                  {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return new Symbol(sym.sNewArray, yyline, yycolumn, yytext());}
-{New}                       {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return new Symbol(sym.sNew, yyline, yycolumn, yytext());}
-{ReadInteger}               {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return new Symbol(sym.sReadInteger, yyline, yycolumn, yytext());}
-{ReadLine}                  {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return new Symbol(sym.sReadLine, yyline, yycolumn, yytext());}
-{Malloc}                    {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return new Symbol(sym.sMalloc, yyline, yycolumn, yytext());}
-{GetByte}                   {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return new Symbol(sym.sGetByte, yyline, yycolumn, yytext());}
-{SetByte}                   {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return new Symbol(sym.sSetByte, yyline, yycolumn, yytext());}
-{Return}                    {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return new Symbol(sym.sReturn, yyline, yycolumn, yytext());}
-{Break}                     {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return new Symbol(sym.sBreak, yyline, yycolumn, yytext());}
+{Int}                       {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return symbol(sym.INT);}
+{Double}                    {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return symbol(sym.DOUBLE);}
+{Bool}                      {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return symbol(sym.BOOL);}
+{String}                    {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return symbol(sym.STRING);}
+{Null}                      {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return symbol(sym.sNull);}
+{For}                       {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return symbol(sym.lFor);}
+{While}                     {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return symbol(sym.lWhile);}
+{If}                        {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return symbol(sym.cIf);}
+{Else}                      {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return symbol(sym.cElse);}
+{Void}                      {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return symbol(sym.sVoid);}
+{Class}                     {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return symbol(sym.sClass);}
+{Interface}                 {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return symbol(sym.sInterface);}
+{Extends}                   {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return symbol(sym.sExtends);}
+{This}                      {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return symbol(sym.sThis);}
+{Print}                     {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return symbol(sym.sPrint);}    
+{Implements}                {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return symbol(sym.sImplements);}
+{NewArray}                  {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return symbol(sym.sNewArray);}
+{New}                       {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return symbol(sym.sNew);}
+{ReadInteger}               {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return symbol(sym.sReadInteger);}
+{ReadLine}                  {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return symbol(sym.sReadLine);}
+{Malloc}                    {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return symbol(sym.sMalloc);}
+{GetByte}                   {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return symbol(sym.sGetByte);}
+{SetByte}                   {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return symbol(sym.sSetByte);}
+{Return}                    {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return symbol(sym.sReturn);}
+{Break}                     {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return symbol(sym.sBreak);}
 /*  Constants   */
-{LogicalConstants}          {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "T_LogicalConstant", false)); return new Symbol(sym.boolConstant, yyline, yycolumn, yytext());}
-{IntegerConstants}          {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeNumbers(yytext(), "T_IntConstant"), false)); return new Symbol(sym.integerConstant, yyline, yycolumn, yytext());}
-{DoubleConstants}           {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeNumbers(yytext(), "T_DoubleConstant"), false)); return new Symbol(sym.doubleConstant, yyline, yycolumn, yytext());}
-{StringConstants}           {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeNumbers(yytext(), "T_String"), false)); return new Symbol(sym.stringConstant, yyline, yycolumn, yytext());}
-{ArithmeticOperators}       {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return new Symbol(sym.ArithmeticOperators, yyline, yycolumn, yytext());}
-{ComparisonOperators}       {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return new Symbol(sym.ComparisonOperators, yyline, yycolumn, yytext());}
-{SumOperator}               {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return new Symbol(sym.sum, yyline, yycolumn, yytext());}
-{NegativeOperator}          {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return new Symbol(sym.negative, yyline, yycolumn, yytext());}
-{EqualityOperators}         {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return new Symbol(sym.equality, yyline, yycolumn, yytext());}
-{LogicalAnd}                {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return new Symbol(sym.and, yyline, yycolumn, yytext());}
-{LogicalOr}                 {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return new Symbol(sym.or, yyline, yycolumn, yytext());}
-{AssignmentOperator}        {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return new Symbol(sym.assignment, yyline, yycolumn, yytext());}
-{DenialOperator}            {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return new Symbol(sym.denial, yyline, yycolumn, yytext());}
-{OpeningParenthesis}        {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return new Symbol(sym.OpeningParenthesis, yyline, yycolumn, yytext());}
-{ClosedParenthesis}         {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return new Symbol(sym.ClosedParenthesis, yyline, yycolumn, yytext());}
-{Parenthesis}               {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return new Symbol(sym.Parenthesis, yyline, yycolumn, yytext());}
-{OpeningBracket}            {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return new Symbol(sym.OpeningBracket, yyline, yycolumn, yytext());}
-{ClosedBracket}             {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return new Symbol(sym.ClosedBracket, yyline, yycolumn, yytext());}
-{Brackets}                  {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return new Symbol(sym.Brackets, yyline, yycolumn, yytext());}
-{OpeningCurlyBracket}       {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return new Symbol(sym.OpeningCurlyBracket, yyline, yycolumn, yytext());}
-{ClosedCurlyBracket}        {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return new Symbol(sym.ClosedCurlyBracket, yyline, yycolumn, yytext());}
-{CurlyBrackets}             {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return new Symbol(sym.CurlyBrackets, yyline, yycolumn, yytext());}
-{Semicolon}                 {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return new Symbol(sym.pyc, yyline, yycolumn, yytext());}
-{Comma}                     {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return new Symbol(sym.comma, yyline, yycolumn, yytext());}
-{Dot}                       {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return new Symbol(sym.dot, yyline, yycolumn, yytext());}
+{LogicalConstants}          {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "T_LogicalConstant", false)); return symbol(sym.boolConstant);}
+{IntegerConstants}          {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeNumbers(yytext(), "T_IntConstant"), false)); return symbol(sym.integerConstant);}
+{DoubleConstants}           {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeNumbers(yytext(), "T_DoubleConstant"), false)); return symbol(sym.doubleConstant);}
+{StringConstants}           {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeNumbers(yytext(), "T_String"), false)); return symbol(sym.stringConstant);}
+{ArithmeticOperators}       {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return symbol(sym.ArithmeticOperators);}
+{ComparisonOperators}       {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return symbol(sym.ComparisonOperators);}
+{SumOperator}               {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return symbol(sym.sum);}
+{NegativeOperator}          {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return symbol(sym.negative);}
+{EqualityOperators}         {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return symbol(sym.equality);}
+{LogicalAnd}                {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return symbol(sym.and);}
+{LogicalOr}                 {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return symbol(sym.or);}
+{AssignmentOperator}        {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return symbol(sym.assignment);}
+{DenialOperator}            {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return symbol(sym.denial);}
+{OpeningParenthesis}        {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return symbol(sym.OpeningParenthesis);}
+{ClosedParenthesis}         {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return symbol(sym.ClosedParenthesis);}
+{Parenthesis}               {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return symbol(sym.Parenthesis);}
+{OpeningBracket}            {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return symbol(sym.OpeningBracket);}
+{ClosedBracket}             {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return symbol(sym.ClosedBracket);}
+{Brackets}                  {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return symbol(sym.Brackets);}
+{OpeningCurlyBracket}       {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return symbol(sym.OpeningCurlyBracket);}
+{ClosedCurlyBracket}        {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return symbol(sym.ClosedCurlyBracket);}
+{CurlyBrackets}             {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return symbol(sym.CurlyBrackets);}
+{Semicolon}                 {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return symbol(sym.pyc);}
+{Comma}                     {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return symbol(sym.comma);}
+{Dot}                       {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return symbol(sym.dot);}
 /*  Identifiers  */
-{Identifiers}               {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "T_Identifier", false)); return new Symbol(sym.ident, yyline, yycolumn, yytext());}
+{Identifiers}               {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "T_Identifier", false)); return symbol(sym.ident);}
 {WhiteSpace}                { /* ignore */ }
 {Comments}                  { /* ignore */ }
 /*Errors*/
