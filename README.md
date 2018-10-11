@@ -98,7 +98,7 @@ numero de linea y numero de columna donde ocurrio el error y que tipo de error e
 
 ```
 {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "Unrecognized char", true));}
-``
+```
 Para el manejo de errores sintácticos, se hizo uso de las herramientas de CUP, para ello definio dentro de la gramatica
 formal, producciones que generaran el token error y cuando eso sucede se llama al método de error correspondiente y dentro 
 de este método se agrega a una lista de errores para poder mostrarlos en pantalla más adelante, de igual forma que los 
@@ -111,7 +111,7 @@ Decl ::=  VariableDecl
         | InterfaceDecl
         | error pyc
         | error ClosedCurlyBracket;
-``
+```
 
 ## Opinion del Autor
 
