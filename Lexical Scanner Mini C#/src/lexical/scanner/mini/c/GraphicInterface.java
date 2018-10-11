@@ -1,6 +1,7 @@
 
 package lexical.scanner.mini.c;
 
+import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -8,6 +9,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -21,15 +24,18 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  */
 public class GraphicInterface extends javax.swing.JFrame {
     
+    private String pathLexicalAnalyzer;
+    private String pathSyntacticAnalyzer;
     private String path;
     private String fileName;
     
     public GraphicInterface() {
         initComponents();
         path = "";
+        pathLexicalAnalyzer = "";
+        pathSyntacticAnalyzer = "";
         fileName = "";
         btnAnalize.setEnabled(false);
-        btnSaveOutFile.setEnabled(false);
     }
 
     /**
@@ -53,8 +59,6 @@ public class GraphicInterface extends javax.swing.JFrame {
         tAFileIn = new javax.swing.JTextArea();
         jScrollPane2 = new javax.swing.JScrollPane();
         tAFileOut = new javax.swing.JTextArea();
-        btnSaveOutFile = new javax.swing.JButton();
-        jLabel6 = new javax.swing.JLabel();
         btnCleanTexts = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -93,9 +97,9 @@ public class GraphicInterface extends javax.swing.JFrame {
 
         jLabel3.setText("Compilar Analizador");
 
-        jLabel4.setText("Contenido del archivo");
+        jLabel4.setText("Archivo de entrada");
 
-        jLabel5.setText("Archivo de salida");
+        jLabel5.setText("Salida");
 
         tAFileIn.setEditable(false);
         tAFileIn.setColumns(20);
@@ -106,15 +110,6 @@ public class GraphicInterface extends javax.swing.JFrame {
         tAFileOut.setColumns(20);
         tAFileOut.setRows(5);
         jScrollPane2.setViewportView(tAFileOut);
-
-        btnSaveOutFile.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/disquete.png"))); // NOI18N
-        btnSaveOutFile.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSaveOutFileActionPerformed(evt);
-            }
-        });
-
-        jLabel6.setText("Guardar Análisis");
 
         btnCleanTexts.setText("Limpiar Textos");
         btnCleanTexts.addActionListener(new java.awt.event.ActionListener() {
@@ -130,38 +125,29 @@ public class GraphicInterface extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(43, 43, 43)
-                        .addComponent(jLabel1))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(42, 42, 42)
-                        .addComponent(btnUploadFile, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(34, 34, 34)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel6))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnAnalize, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(39, 39, 39)
-                        .addComponent(btnSaveOutFile, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(btnCompileLexer, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(84, 84, 84))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jLabel3)
-                        .addGap(71, 71, 71))))
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(43, 43, 43)
-                        .addComponent(jLabel4))
-                    .addGroup(layout.createSequentialGroup()
                         .addGap(35, 35, 35)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(9, 9, 9)
+                                        .addComponent(btnCompileLexer, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(jLabel3))
+                                .addGap(38, 38, 38)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel1)
+                                    .addComponent(btnUploadFile, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(56, 56, 56)
+                                        .addComponent(btnAnalize, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(74, 74, 74)
+                                        .addComponent(jLabel2))))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(48, 48, 48)
+                        .addComponent(jLabel4)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(32, 32, 32)
@@ -181,15 +167,13 @@ public class GraphicInterface extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnCompileLexer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnAnalize, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnUploadFile, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnSaveOutFile, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btnAnalize, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 73, Short.MAX_VALUE)
+                    .addComponent(btnUploadFile, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
                     .addComponent(jLabel2)
                     .addComponent(jLabel3)
-                    .addComponent(jLabel6))
+                    .addComponent(jLabel1))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
@@ -210,7 +194,7 @@ public class GraphicInterface extends javax.swing.JFrame {
         
         JFileChooser chooser = new JFileChooser();
         chooser.setFileSelectionMode( JFileChooser.FILES_ONLY );
-        FileNameExtensionFilter filter = new FileNameExtensionFilter("Archivos Mini C#", "frag");
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Archivos Mini C#", "frag", "txt");
         chooser.setFileFilter(filter);
         int selection  = chooser.showOpenDialog(this);
         
@@ -219,6 +203,7 @@ public class GraphicInterface extends javax.swing.JFrame {
                 path = chooser.getSelectedFile().getAbsolutePath();
                 fileName = chooser.getSelectedFile().getName();
                 fileName = fileName.replace(".frag", "");
+                fileName = fileName.replace(".txt", "");
 
                 File file = new File(path);
 
@@ -265,23 +250,25 @@ public class GraphicInterface extends javax.swing.JFrame {
         FileNameExtensionFilter filter = new FileNameExtensionFilter("Archivos Lexicos", "flex");
         chooser.setFileFilter(filter);
         int selection  = chooser.showOpenDialog(this);
+        boolean ready = false;
         
         if(selection == JFileChooser.APPROVE_OPTION){     
             if(chooser.getSelectedFile() != null){
-                path = chooser.getSelectedFile().getAbsolutePath();
+                pathLexicalAnalyzer = chooser.getSelectedFile().getAbsolutePath();
 
-                File file = new File(path);
+                File file = new File(pathLexicalAnalyzer);
 
                 if(file.exists()){   
                     try{
                         //Compilar el archivo .Flex
-                        jflex.Main.main(new String[]{path});
+                        jflex.Main.main(new String[]{pathLexicalAnalyzer});
                         
                         JOptionPane.showMessageDialog(null,
                         "El archivo (.flex) ha compilado correctamente.",
                         "Aviso",JOptionPane.INFORMATION_MESSAGE);
                         
-                        System.exit(0);
+                        ready = true;
+                        //System.exit(0);
                     }
                     catch(Exception e){
                         JOptionPane.showMessageDialog(null,
@@ -295,116 +282,153 @@ public class GraphicInterface extends javax.swing.JFrame {
                     "ERROR",JOptionPane.ERROR_MESSAGE);
                 }
             } 
-        }  
+        }
+
+        if(ready){
+            /* Cargar el archivo .cup para generar el parser */
+            chooser.setFileSelectionMode( JFileChooser.FILES_ONLY );
+            filter = new FileNameExtensionFilter("Archivos Sintacticos", "cup");
+            chooser.setFileFilter(filter);
+            selection = chooser.showOpenDialog(this);
+            
+            if(selection == JFileChooser.APPROVE_OPTION){
+                if(chooser.getSelectedFile() != null){
+                pathSyntacticAnalyzer = chooser.getSelectedFile().getAbsolutePath();
+
+                File file = new File(pathSyntacticAnalyzer);
+
+                if(file.exists()){   
+                    try{
+                        //Compilar el archivo .cup
+                        String[] argSyntactic = {"-parser", "SyntacticAnalyzer", pathSyntacticAnalyzer};
+                        
+                        java_cup.Main.main(argSyntactic);
+                        
+                        JOptionPane.showMessageDialog(null,
+                        "El archivo (.cup) ha compilado correctamente.",
+                        "Aviso",JOptionPane.INFORMATION_MESSAGE);
+                        
+                        boolean movFileSym = MoveFiles("C:\\Users\\bryan\\Documents\\GitHub\\Lexical-scanner-Mini-C-\\Lexical Scanner Mini C#\\sym.java");
+                        boolean movFileSyntacticAnalizer = MoveFiles("C:\\Users\\bryan\\Documents\\GitHub\\Lexical-scanner-Mini-C-\\Lexical Scanner Mini C#\\SyntacticAnalyzer.java");
+                        
+                        if(movFileSym && movFileSyntacticAnalizer){
+                            System.out.println("Generado!");
+                            System.exit(0);
+                        }
+                        else{
+                            System.out.println("Fallo en el movimiento de archivos!");
+                            System.exit(0);
+                        }
+                        
+                    }
+                    catch(Exception e){
+                        JOptionPane.showMessageDialog(null,
+                        "No se ha podido compilar el archivo (.cup).",
+                        "ERROR",JOptionPane.ERROR_MESSAGE);
+                    }                  
+                }
+                else{
+                    JOptionPane.showMessageDialog(null,
+                    "El archivo seleccionado no puede ser encontrado.",
+                    "ERROR",JOptionPane.ERROR_MESSAGE);
+                }
+            } 
+            }
+        }
+        
     }//GEN-LAST:event_btnCompileLexerActionPerformed
 
     private void btnAnalizeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnalizeActionPerformed
-
-        ArrayList<Yytoken> tokens = null;
         
-        //Upload file of the path
+        ArrayList<Yytoken> lexicalErrors = null;
+        ArrayList<String> syntacticErrors = null;
+        
         BufferedReader reader = null;
+        
         try {
-            //Ruta del archivo especificado por el usuario
             reader = new BufferedReader(new FileReader(path));
             LexicalScanner lexer = new LexicalScanner(reader);
+            SyntacticAnalyzer parser = new SyntacticAnalyzer(lexer);
+            parser.parse();
             
-            Yytoken token = null;
+            lexicalErrors = lexer.tokens;
+            syntacticErrors = parser.SyntacticErrors;
             
-            while(true){
-                token = lexer.nextToken();
-                
-                if(token==null){
-                    break;
-                }else{
-                    System.out.println(token.toString());
-                }
-            }          
-            tokens = lexer.tokens;
             reader.close();
             
             String content = "";
             
-            //Put result on display
-            for(Yytoken element: tokens){
+            //Put errors on display
+            //Lexical Errors
+            for(Yytoken element: lexicalErrors){
                 if(element.error){
                     content += element.isError() + "\r\n";
                 }
-                else{
-                    content += element.toString() + "\r\n";
-                }
             }
             
-            tAFileOut.setText(content);
-            tAFileOut.setCaretPosition(0);
-            btnAnalize.setEnabled(false);
-            btnSaveOutFile.setEnabled(true);
+            //Syntactic Errors
+            for(String element: syntacticErrors){
+                content += element + "\r\n";
+            }
             
+            if((lexicalErrors.size() == 0) &&(syntacticErrors.size() == 0)){
+                content = "*** Archivo sin errores léxicos o sintácticos ***";
+                tAFileOut.setForeground(Color.GREEN);
+                tAFileOut.setText(content);      
+                tAFileOut.setCaretPosition(0);
+                btnAnalize.setEnabled(false);
+                
+                JOptionPane.showMessageDialog(null,
+                "El archivo analizado es léxicamente y sintácticamente correcto.",
+                "Aviso",JOptionPane.INFORMATION_MESSAGE);       
+            }
+            else{
+                tAFileOut.setForeground(Color.RED);
+                tAFileOut.setText(content);      
+                tAFileOut.setCaretPosition(0);
+                btnAnalize.setEnabled(false);
+                
+                JOptionPane.showMessageDialog(null,
+                "El archivo contiene errores, el detalle de los errores se muestra en pantalla.",
+                "Aviso",JOptionPane.INFORMATION_MESSAGE);
+            }     
         } catch (FileNotFoundException ex) {
             Logger.getLogger(GraphicInterface.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             Logger.getLogger(GraphicInterface.class.getName()).log(Level.SEVERE, null, ex);
-        }     
+        }
     }//GEN-LAST:event_btnAnalizeActionPerformed
-
-    private void btnSaveOutFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveOutFileActionPerformed
-        // TODO add your handling code here:
-        JOptionPane.showMessageDialog(null,
-                    "Seleccione la ubicación donde desea almacenar el archivo.out",
-                    "Aviso",JOptionPane.INFORMATION_MESSAGE);
-        
-        File file = new File(fileName + ".out");
-        JFileChooser chooser = new JFileChooser();
-        FileNameExtensionFilter filter = new FileNameExtensionFilter("Archivo de salida", "out");
-        chooser.setFileFilter(filter);     
-        chooser.setSelectedFile(file);
-        
-        int selection  = chooser.showSaveDialog(this);
-        
-        if(selection == JFileChooser.APPROVE_OPTION)
-            {
-                try {  
-                    String name = chooser.getSelectedFile().getAbsolutePath();
-                   
-                    if(!name.contains(".out")){
-                        name = name + ".out";
-                    }
-                                 
-                    file = new File(name);
-                    FileWriter writer = null;
-                    BufferedWriter bw = null;
-                    
-                    if(file.exists()){
-                        file.delete();
-                        writer = new FileWriter(file);
-                        bw = new BufferedWriter(writer);
-                        bw.write(tAFileOut.getText());
-                        bw.close();
-                    }else{
-                        writer = new FileWriter(file);
-                        bw = new BufferedWriter(writer);
-                        bw.write(tAFileOut.getText());
-                        bw.close();                     
-                    }
-                    
-                    JOptionPane.showMessageDialog(null,
-                    "El archivo se ha guardado correctamente.",
-                    "Información",JOptionPane.INFORMATION_MESSAGE);
-                                       
-                } catch (IOException ex) {
-                    Logger.getLogger(GraphicInterface.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }  
-        
-    }//GEN-LAST:event_btnSaveOutFileActionPerformed
 
     private void btnCleanTextsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCleanTextsActionPerformed
         tAFileOut.setText(null);
         tAFileIn.setText(null);
         btnAnalize.setEnabled(false);
-        btnSaveOutFile.setEnabled(false);
     }//GEN-LAST:event_btnCleanTextsActionPerformed
 
+    public static boolean MoveFiles(String path) {
+        boolean successful = false;
+        File file = new File(path);
+        if (file.exists()) {
+            System.out.println("\n*** Moviendo: " + file + " \n***");
+            Path currentRelativePath = Paths.get("");
+            String newDir = currentRelativePath.toAbsolutePath().toString()
+                    + File.separator + "src" + File.separator
+                    + "lexical" + File.separator + "scanner" + File.separator
+                    + "mini" + File.separator + "c" + File.separator + file.getName();
+            File lastFile = new File(newDir);
+            lastFile.delete();
+            if (file.renameTo(new File(newDir))) {
+                System.out.println("\n*** Generado " + file + "***\n");
+                successful = true;
+            } else {
+                System.out.println("\n*** No movido " + file + " ***\n");
+            }
+
+        } else {
+            System.out.println("\n*** Codigo no existente ***\n");
+        }
+        return successful;
+    }
     /**
      * @param args the command line arguments
      */
@@ -444,14 +468,12 @@ public class GraphicInterface extends javax.swing.JFrame {
     private javax.swing.JButton btnAnalize;
     private javax.swing.JButton btnCleanTexts;
     private javax.swing.JButton btnCompileLexer;
-    private javax.swing.JButton btnSaveOutFile;
     private javax.swing.JButton btnUploadFile;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextArea tAFileIn;
