@@ -62,7 +62,7 @@ public class GraphicInterface extends javax.swing.JFrame {
         btnCleanTexts = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Analizador Léxico - Mini C#");
+        setTitle("Mini C#");
         setLocation(new java.awt.Point(0, 0));
         setResizable(false);
 
@@ -342,6 +342,7 @@ public class GraphicInterface extends javax.swing.JFrame {
         
         ArrayList<Yytoken> lexicalErrors = null;
         ArrayList<String> syntacticErrors = null;
+        boolean lexErrors = false;
         
         BufferedReader reader = null;
         
@@ -363,6 +364,7 @@ public class GraphicInterface extends javax.swing.JFrame {
             for(Yytoken element: lexicalErrors){
                 if(element.error){
                     content += element.isError() + "\r\n";
+                    lexErrors = true;
                 }
             }
             
@@ -371,7 +373,7 @@ public class GraphicInterface extends javax.swing.JFrame {
                 content += element + "\r\n";
             }
             
-            if((lexicalErrors.size() == 0) &&(syntacticErrors.size() == 0)){
+            if((!lexErrors) &&(syntacticErrors.isEmpty())){
                 content = "*** Archivo sin errores léxicos o sintácticos ***";
                 tAFileOut.setForeground(Color.GREEN);
                 tAFileOut.setText(content);      

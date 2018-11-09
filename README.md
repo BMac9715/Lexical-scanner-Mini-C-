@@ -1,14 +1,14 @@
-# Analizador Léxico Mini C#
+# Mini C# (Analizador Léxico y Sintáctico)
 
 ## Descripcion
 
-**Mini C#** Es un escáner léxico para una parte del lenguaje de programación C#.
-Su función basicamente es reconocer tokens segun el orden de lectura del archivo, en base a 
-expresiones regulares el programa separará los tokens como correctos o errores, tanto tokens
-como errores serán mostrados en pantalla y si el usuario lo desea se generará un archivo (.out)
-que contenga tokens y errores. Las expresiones regulares fuerón implementedas en un metacompilador
-que genera analizadores léxicos en basea ellas, se hizo uso del metacompilador JFLEX que implementa 
-el analizador en código de JAVA.
+**Mini C#** Es un analizador léxico y sintáctico para una pequeña parte del lenguaje de programación C#.
+Su función se lleva acabo en 2 etapas, la primera parte es el análisis léxico y consiste en reconocer tokens 
+segun el orden de lectura del archivo, y en base a expresiones regulares el programa separará los tokens 
+como correctos o errores, la segunda parte es el análisis sintáctico, recibe como entrada el resultado del 
+análisis léxico y en base a las reglas gramaticales definidas en la grámatica formal definida, el cual genera un 
+analizador y tabla de simbolos, para lograr estas funcines se hizo uso de las herramientas JFLEX y CUP los cuales
+generan código en JAVA.
 
 ## Requerimientos del software
 
@@ -21,10 +21,10 @@ Java instalada en la PC:
 
 El algoritmo que describe el funcionamiento del software es el siguiente:
  1. Ejecutar la aplicación .Jar.
- 2. Cargar un archivo con código Mini C# (.frag)
+ 2. Cargar un archivo con código Mini C# (.frag, .txt)
  3. Analizar el código para válidar los tokens.
- 4. Se mostrará en pantalla los tokens y errores detalladamente y
- se tendrá la opción de generar un archivo (.out) con dicha información.
+ 4. Analizar el resultado del análisis léxico y validar si los tokens cumplen las reglas sintácticas.
+ 5. Se mostrará en pantalla el resultado del análisis general.
  
  **Nota** Es importante recalcar que previamente el analizador léxico tuvo que haber sido compilado.
  
@@ -32,9 +32,9 @@ El algoritmo que describe el funcionamiento del software es el siguiente:
 
 #### Clikeando sobre el icono de la aplicación
 	
-Una vez tenga la carpeta del proyecto dirigase a la carpeta _Analizador Lexico - PHP_ una vez este dentro
+Una vez tenga la carpeta del proyecto dirigase a la carpeta _Lexical Scanner Mini C#_ , una vez este dentro
 de esta carpeta dirigase a la carpeta _dist_ y dentro de esta carpeta encontrará el archivo llamado
-_MiniPHP.jar_, para ejecutarlo pulse doble-click sobre este archivo.
+_MiniC#.jar_, para ejecutarlo pulse doble-click sobre este archivo.
 
 La ruta relativa del archivo ejecutable es:
 ```
@@ -50,7 +50,7 @@ java -jar Lexical Scanner Mini C#\dist\MiniC#.jar
 
 Una vez se ejecutado el programa se mostrará la siguiente pantalla:
 
-![MiniC](https://image.ibb.co/kkuP09/MiniC.jpg)
+![MiniC](https://image.ibb.co/jOZD69/MiniC.jpg)
 
 ### Cargar Archivo Mini C#
 
@@ -58,12 +58,12 @@ Para cargar un archivo con código de Mini C#:
 1. Dirigase al boton **Cargar Archivo**
 2. Presione click sobre este boton 
 
-![MiniC-Cargar](https://image.ibb.co/hwvWf9/Mini_C_Cargar.jpg)
+![MiniC-Cargar](https://image.ibb.co/jB9KeU/LoadFile.jpg)
 
 Se mostrará el manejador de carpetas y archivos, en esta pantalla tendra que buscar y 
-seleccionar el archivo **(.frag)** deseado.
+seleccionar el archivo **(.frag, .txt)** deseado.
 
-![MiniC-Cargar2](https://image.ibb.co/ii0a7p/Mini_C_Cargar2.jpg)
+![MiniC-Cargar2](https://image.ibb.co/mwxpeU/Explorador-Archivos-LF.jpg)
 
 ### Analizar Archivo Mini C#
 
@@ -71,49 +71,56 @@ Para analizar un archivo Mini C#:
 1. Dirigase al boton **Analizar**
 2. Presione click sobre este boton 
 
-![MiniC-Analizar1](https://image.ibb.co/dffWf9/Mini_C_Analizar.jpg)
+![MiniC-Analizar1](https://image.ibb.co/mn9Vm9/Analizar-Mini-C.jpg)
 
 Esto inicializará el análisis del archivo cargado anteriormente y una vez este finalice
 se mostrará el resultado del análisis en pantalla.
 
-![MiniC-Mostrar](https://image.ibb.co/eA2oSp/Mini_C_Mostrar.jpg)
+![MiniC-MostrarSE](https://image.ibb.co/eSXBtp/Mostrar-Mini-C.jpg)
 
-Si el usuario lo desea podrá guardar el resultado del análisis en un archivo con extensión ".out"
-pulsando el boton **Guardar Análisis"
+![MiniC-MostrarCE](https://image.ibb.co/ewSNzU/Mostrar-CEMini-C.jpg)
 
-![MiniC-Guardar](https://image.ibb.co/hVsYtU/Mini_C_Guardar.jpg)
-
-El programa le pedirá elegir la ubicación donde se almacenará el archivo con el resultado del 
-análisis léxico.
-
-### *Compilar Analizador Léxico
+### *Compilar Analizadores
 
 Cabe recalcar que esta función está unicamente disponible para el desarrollador, puesto que para la 
-ejecución correcta del software es necesario el analizador léxico ya compilado. Por lo tanto el 
-botón **Compilar Analizador** se encontrará deshabilitado.
+ejecución correcta del software es necesario que el analizador léxico y sintáctico se encuentren ya compilados. 
+Por lo tanto el botón **Compilar Analizador** se encontrará deshabilitado.
 
-![MiniC-Compilar](https://image.ibb.co/jdYv7p/Mini_C_Compilar.jpg)
+![MiniC-Compilar](https://image.ibb.co/iyCVKU/Compilar-Mini-C.jpg)
 
 ## Manejo De Errores
 
-Para el manejo de errores se hizo uso de la expresion '.' de JFLEX, esta expresion regular se caracteriza
+Para el manejo de errores léxicos, se hizo uso de la expresion '.' de JFLEX, esta expresion regular se caracteriza
 por ejecutarse cuando ninguna expresion regular coincidio con el token actual por lo que esta fuera del
-lenguaje se podria decir. Además también se diseñaron expresiones regulares que permiten capturar otros
-errores. La acción que se realiza es de agregar el error como un token a la lista, detallando el token,
+lenguaje se podria decir. Además se diseñaron expresiones regulares que permiten capturar errores especificos. 
+La acción que se realiza consiste en agregar el error como un token a la lista, detallando el token,
 numero de linea y numero de columna donde ocurrio el error y que tipo de error es.
 
 ```
-{this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "Unrecognized char", true)); return new Yytoken(yytext(), yyline, yycolumn, "Unrecognized char", true);}
+{this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "Unrecognized char", true));}
+```
+Para el manejo de errores sintácticos, se hizo uso de las herramientas de CUP, para ello definio dentro de la gramatica
+formal, producciones que generaran el token error y cuando eso sucede se llama al método de error correspondiente y dentro 
+de este método se agrega a una lista de errores para poder mostrarlos en pantalla más adelante, de igual forma que los 
+errores léxicos, se detalla el numero de linea y numero de columna donde ocurrio el error y que tipo de error es.
+
+```
+Decl ::=  VariableDecl
+		| FunctionDecl
+        | ClassDecl
+        | InterfaceDecl
+        | error pyc
+        | error ClosedCurlyBracket;
 ```
 
 ## Opinion del Autor
 
 A mi criterio el software **Mini C#** desarrollado por mi persona, funciona de manera correcta puesto que
 se realizaron distintas pruebas para verificar que no generará problemas al momento de ejecutarlo en cualquier
-PC, además su correcto funcionamiento tambien abarca la exactitud léxica que posee para analizar los archivos
+PC, además su correcto funcionamiento tambien abarca la exactitud léxica y sintáctica que posee para analizar los archivos
 escritos en Mini C#, se escribieron expresiones regulares bastante grandes que tratan de abarcar la mayor cantidad
-de casos posibles, se hizo una investigación profunda respecto a la herramienta JFLEX para desarrollar expresiones
-regulares óptimas.
+de casos posibles y se modifico la grámatica formal proporcionada para mejorar el funcionamiento de los analizadores,
+además se hizo una investigación profunda respecto a las herramientas JFLEX y CUP para su correcto uso.
 
 ## Información del Autor
 	
