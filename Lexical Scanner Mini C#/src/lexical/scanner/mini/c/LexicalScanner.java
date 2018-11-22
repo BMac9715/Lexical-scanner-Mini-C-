@@ -79,16 +79,16 @@ public class LexicalScanner implements java_cup.runtime.Scanner {
    * Translates characters to character classes
    */
   private static final String ZZ_CMAP_PACKED = 
-    "\11\0\1\47\1\45\1\64\1\50\1\44\22\0\1\46\1\71\1\62"+
-    "\2\0\1\65\1\72\1\0\1\74\1\75\1\52\1\66\1\103\1\60"+
-    "\1\57\1\51\1\54\11\53\1\0\1\102\1\67\1\70\1\67\2\0"+
-    "\1\30\1\37\2\56\1\61\1\56\1\36\1\42\1\33\2\42\1\34"+
-    "\1\35\1\27\1\42\1\24\1\42\1\32\1\40\4\42\1\55\2\42"+
-    "\1\76\1\63\1\77\1\0\1\43\1\0\1\22\1\7\1\21\1\4"+
-    "\1\11\1\15\1\14\1\17\1\1\1\42\1\41\1\10\1\25\1\2"+
-    "\1\5\1\26\1\42\1\13\1\12\1\3\1\6\1\20\1\16\1\23"+
-    "\1\31\1\42\1\100\1\73\1\101\7\0\1\64\u1fa2\0\1\64\1\64"+
-    "\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\udfe6\0";
+    "\11\0\1\47\1\45\1\64\1\50\1\44\22\0\1\46\1\72\1\62"+
+    "\1\105\1\0\1\65\1\73\1\0\1\75\1\76\1\52\1\66\1\104"+
+    "\1\60\1\57\1\51\1\54\11\53\1\0\1\103\1\67\1\70\1\71"+
+    "\2\0\1\30\1\37\2\56\1\61\1\56\1\36\1\42\1\33\2\42"+
+    "\1\34\1\35\1\27\1\42\1\24\1\42\1\32\1\40\4\42\1\55"+
+    "\2\42\1\77\1\63\1\100\1\0\1\43\1\0\1\22\1\7\1\21"+
+    "\1\4\1\11\1\15\1\14\1\17\1\1\1\42\1\41\1\10\1\25"+
+    "\1\2\1\5\1\26\1\42\1\13\1\12\1\3\1\6\1\20\1\16"+
+    "\1\23\1\31\1\42\1\101\1\74\1\102\7\0\1\64\u1fa2\0\1\64"+
+    "\1\64\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\uffff\0\udfe6\0";
 
   /** 
    * Translates characters to character classes
@@ -102,19 +102,20 @@ public class LexicalScanner implements java_cup.runtime.Scanner {
 
   private static final String ZZ_ACTION_PACKED_0 =
     "\1\0\1\1\23\2\3\3\2\4\2\5\1\6\1\7"+
-    "\1\1\1\10\1\11\1\12\1\13\2\1\1\14\1\15"+
-    "\1\16\1\17\1\20\1\21\1\22\1\23\1\2\1\24"+
-    "\26\2\1\3\1\25\1\26\3\0\1\27\1\0\1\11"+
-    "\1\30\1\31\1\32\1\33\1\34\1\35\1\36\13\2"+
-    "\1\37\5\2\1\40\4\2\3\0\1\5\1\0\2\2"+
-    "\1\41\1\42\1\43\1\2\1\44\1\2\1\45\4\2"+
-    "\1\46\7\2\1\26\1\0\3\2\1\47\3\2\1\50"+
-    "\1\51\1\52\10\2\1\53\1\2\1\54\1\55\3\2"+
-    "\1\56\4\2\1\57\3\2\1\60\1\61\2\2\1\62"+
-    "\1\2\1\63\1\64\2\2\1\65\1\2\1\66";
+    "\1\1\1\10\1\11\1\12\1\13\1\14\2\1\1\15"+
+    "\1\16\1\17\1\20\1\21\1\22\1\23\1\24\1\25"+
+    "\1\2\1\26\27\2\1\3\1\27\1\30\3\0\1\31"+
+    "\1\0\1\32\1\33\1\34\1\35\1\36\1\37\1\40"+
+    "\1\41\14\2\1\42\6\2\1\43\4\2\3\0\1\5"+
+    "\1\0\3\2\1\44\1\45\1\46\1\2\1\47\1\2"+
+    "\1\50\4\2\1\51\10\2\1\30\1\0\4\2\1\52"+
+    "\3\2\1\53\1\54\1\55\1\56\11\2\1\57\1\2"+
+    "\1\60\1\61\3\2\1\62\3\2\1\63\1\2\1\64"+
+    "\3\2\1\65\1\66\2\2\1\67\1\2\1\70\1\71"+
+    "\2\2\1\72\1\2\1\73";
 
   private static int [] zzUnpackAction() {
-    int [] result = new int[182];
+    int [] result = new int[193];
     int offset = 0;
     offset = zzUnpackAction(ZZ_ACTION_PACKED_0, offset, result);
     return result;
@@ -139,32 +140,34 @@ public class LexicalScanner implements java_cup.runtime.Scanner {
   private static final int [] ZZ_ROWMAP = zzUnpackRowMap();
 
   private static final String ZZ_ROWMAP_PACKED_0 =
-    "\0\0\0\104\0\210\0\314\0\u0110\0\u0154\0\u0198\0\u01dc"+
-    "\0\u0220\0\u0264\0\u02a8\0\u02ec\0\u0330\0\u0374\0\u03b8\0\u03fc"+
-    "\0\u0440\0\u0484\0\u04c8\0\u050c\0\u0550\0\u0594\0\104\0\u05d8"+
-    "\0\u061c\0\104\0\u0660\0\u06a4\0\104\0\u06e8\0\u072c\0\u06e8"+
-    "\0\u0770\0\u07b4\0\u07b4\0\u07f8\0\u083c\0\u0880\0\104\0\u08c4"+
-    "\0\104\0\u0908\0\104\0\104\0\104\0\u094c\0\u0198\0\u0990"+
-    "\0\u09d4\0\u0a18\0\u0a5c\0\u0aa0\0\u0ae4\0\u0b28\0\u0b6c\0\u0bb0"+
-    "\0\u0bf4\0\u0c38\0\u0c7c\0\u0cc0\0\u0d04\0\u0d48\0\u0d8c\0\u0dd0"+
-    "\0\u0e14\0\u0e58\0\u0e9c\0\u0ee0\0\u0f24\0\u0f68\0\u0fac\0\u0ff0"+
-    "\0\u1034\0\u1078\0\u072c\0\104\0\u10bc\0\104\0\104\0\104"+
-    "\0\104\0\104\0\104\0\104\0\u1100\0\u1144\0\u1188\0\u11cc"+
-    "\0\u1210\0\u1254\0\u1298\0\u12dc\0\u1320\0\u1364\0\u13a8\0\u13ec"+
-    "\0\u0198\0\u1430\0\u1474\0\u14b8\0\u14fc\0\u1540\0\u1584\0\u15c8"+
-    "\0\u160c\0\u1650\0\u1694\0\u16d8\0\u171c\0\u1760\0\u1034\0\u17a4"+
-    "\0\u17e8\0\u182c\0\u0198\0\u0198\0\u0198\0\u1870\0\u0198\0\u18b4"+
-    "\0\u0198\0\u18f8\0\u193c\0\u1980\0\u19c4\0\u0198\0\u1a08\0\u1a4c"+
-    "\0\u1a90\0\u1ad4\0\u1b18\0\u1b5c\0\u1ba0\0\u1be4\0\u1be4\0\u1c28"+
-    "\0\u1c6c\0\u1cb0\0\u0198\0\u1cf4\0\u1d38\0\u1d7c\0\u0198\0\u0198"+
-    "\0\u0198\0\u1dc0\0\u1e04\0\u1e48\0\u1e8c\0\u1ed0\0\u1f14\0\u1f58"+
-    "\0\u1f9c\0\u0198\0\u1fe0\0\u0198\0\u0198\0\u2024\0\u2068\0\u20ac"+
-    "\0\u0198\0\u20f0\0\u2134\0\u2178\0\u21bc\0\u0198\0\u2200\0\u2244"+
-    "\0\u2288\0\u0198\0\u0198\0\u22cc\0\u2310\0\u0198\0\u2354\0\u0198"+
-    "\0\u0198\0\u2398\0\u23dc\0\u0198\0\u2420\0\u0198";
+    "\0\0\0\106\0\214\0\322\0\u0118\0\u015e\0\u01a4\0\u01ea"+
+    "\0\u0230\0\u0276\0\u02bc\0\u0302\0\u0348\0\u038e\0\u03d4\0\u041a"+
+    "\0\u0460\0\u04a6\0\u04ec\0\u0532\0\u0578\0\u05be\0\106\0\u0604"+
+    "\0\u064a\0\106\0\u0690\0\u06d6\0\106\0\u071c\0\u0762\0\u071c"+
+    "\0\u07a8\0\u07ee\0\u07a8\0\u07ee\0\u0834\0\u087a\0\u08c0\0\106"+
+    "\0\u0906\0\106\0\u094c\0\106\0\106\0\106\0\106\0\u0992"+
+    "\0\u01a4\0\u09d8\0\u0a1e\0\u0a64\0\u0aaa\0\u0af0\0\u0b36\0\u0b7c"+
+    "\0\u0bc2\0\u0c08\0\u0c4e\0\u0c94\0\u0cda\0\u0d20\0\u0d66\0\u0dac"+
+    "\0\u0df2\0\u0e38\0\u0e7e\0\u0ec4\0\u0f0a\0\u0f50\0\u0f96\0\u0fdc"+
+    "\0\u1022\0\u1068\0\u10ae\0\u10f4\0\u113a\0\u0762\0\106\0\u1180"+
+    "\0\106\0\106\0\106\0\106\0\106\0\106\0\106\0\u11c6"+
+    "\0\u120c\0\u1252\0\u1298\0\u12de\0\u1324\0\u136a\0\u13b0\0\u13f6"+
+    "\0\u143c\0\u1482\0\u14c8\0\u150e\0\u01a4\0\u1554\0\u159a\0\u15e0"+
+    "\0\u1626\0\u166c\0\u16b2\0\u16f8\0\u173e\0\u1784\0\u17ca\0\u1810"+
+    "\0\u1856\0\u189c\0\u18e2\0\u10f4\0\u1928\0\u196e\0\u19b4\0\u19fa"+
+    "\0\u01a4\0\u01a4\0\u01a4\0\u1a40\0\u01a4\0\u1a86\0\u01a4\0\u1acc"+
+    "\0\u1b12\0\u1b58\0\u1b9e\0\u01a4\0\u1be4\0\u1c2a\0\u1c70\0\u1cb6"+
+    "\0\u1cfc\0\u1d42\0\u1d88\0\u1dce\0\u1e14\0\u1e14\0\u1e5a\0\u1ea0"+
+    "\0\u1ee6\0\u1f2c\0\u01a4\0\u1f72\0\u1fb8\0\u1ffe\0\u01a4\0\u01a4"+
+    "\0\u01a4\0\u01a4\0\u2044\0\u208a\0\u20d0\0\u2116\0\u215c\0\u21a2"+
+    "\0\u21e8\0\u222e\0\u2274\0\u01a4\0\u22ba\0\u01a4\0\u01a4\0\u2300"+
+    "\0\u2346\0\u238c\0\u01a4\0\u23d2\0\u2418\0\u245e\0\u01a4\0\u24a4"+
+    "\0\u01a4\0\u24ea\0\u2530\0\u2576\0\u01a4\0\u01a4\0\u25bc\0\u2602"+
+    "\0\u01a4\0\u2648\0\u01a4\0\u01a4\0\u268e\0\u26d4\0\u01a4\0\u271a"+
+    "\0\u01a4";
 
   private static int [] zzUnpackRowMap() {
-    int [] result = new int[182];
+    int [] result = new int[193];
     int offset = 0;
     offset = zzUnpackRowMap(ZZ_ROWMAP_PACKED_0, offset, result);
     return result;
@@ -194,134 +197,142 @@ public class LexicalScanner implements java_cup.runtime.Scanner {
     "\1\30\1\0\1\31\1\32\1\33\1\34\2\7\1\35"+
     "\1\36\1\7\1\37\1\2\1\0\1\32\1\40\1\41"+
     "\1\42\1\43\1\44\1\45\1\46\1\47\1\50\1\51"+
-    "\1\52\1\53\1\54\1\55\105\0\1\7\1\56\12\7"+
-    "\1\57\7\7\1\60\16\7\7\0\4\7\2\0\1\7"+
-    "\23\0\5\7\1\61\35\7\7\0\4\7\2\0\1\7"+
-    "\23\0\12\7\1\62\3\7\1\63\24\7\7\0\4\7"+
-    "\2\0\1\7\23\0\4\7\1\64\36\7\7\0\4\7"+
-    "\2\0\1\7\23\0\43\7\7\0\4\7\2\0\1\7"+
-    "\23\0\4\7\1\65\5\7\1\66\30\7\7\0\4\7"+
-    "\2\0\1\7\23\0\7\7\1\67\12\7\1\70\20\7"+
-    "\7\0\4\7\2\0\1\7\23\0\2\7\1\71\40\7"+
-    "\7\0\4\7\2\0\1\7\23\0\10\7\1\72\32\7"+
-    "\7\0\4\7\2\0\1\7\23\0\4\7\1\73\14\7"+
-    "\1\74\21\7\7\0\4\7\2\0\1\7\23\0\16\7"+
-    "\1\75\24\7\7\0\4\7\2\0\1\7\23\0\4\7"+
-    "\1\76\36\7\7\0\4\7\2\0\1\7\23\0\7\7"+
-    "\1\77\33\7\7\0\4\7\2\0\1\7\23\0\12\7"+
-    "\1\100\30\7\7\0\4\7\2\0\1\7\23\0\10\7"+
-    "\1\101\32\7\7\0\4\7\2\0\1\7\23\0\10\7"+
-    "\1\102\32\7\7\0\4\7\2\0\1\7\23\0\21\7"+
-    "\1\103\21\7\7\0\4\7\2\0\1\7\23\0\10\7"+
-    "\1\104\32\7\7\0\4\7\2\0\1\7\23\0\10\7"+
-    "\1\105\32\7\7\0\4\7\2\0\1\7\67\0\1\27"+
-    "\106\0\1\27\104\0\1\106\1\107\104\0\2\33\2\0"+
-    "\1\110\47\0\1\111\27\0\2\33\1\111\1\0\1\110"+
-    "\77\0\2\112\27\0\45\113\1\0\14\113\1\114\1\115"+
-    "\20\113\70\0\1\116\103\0\1\117\105\0\1\120\104\0"+
-    "\1\121\105\0\1\122\105\0\1\123\105\0\1\124\3\0"+
-    "\2\7\1\125\40\7\7\0\4\7\2\0\1\7\23\0"+
-    "\25\7\1\126\15\7\7\0\4\7\2\0\1\7\23\0"+
-    "\7\7\1\127\33\7\7\0\4\7\2\0\1\7\23\0"+
-    "\5\7\1\130\35\7\7\0\4\7\2\0\1\7\23\0"+
-    "\1\131\42\7\7\0\4\7\2\0\1\7\23\0\5\7"+
-    "\1\132\35\7\7\0\4\7\2\0\1\7\23\0\4\7"+
-    "\1\133\36\7\7\0\4\7\2\0\1\7\23\0\10\7"+
-    "\1\134\32\7\7\0\4\7\2\0\1\7\23\0\11\7"+
-    "\1\135\31\7\7\0\4\7\2\0\1\7\23\0\2\7"+
-    "\1\136\40\7\7\0\4\7\2\0\1\7\23\0\12\7"+
-    "\1\137\30\7\7\0\4\7\2\0\1\7\23\0\2\7"+
-    "\1\140\40\7\7\0\4\7\2\0\1\7\23\0\12\7"+
-    "\1\141\30\7\7\0\4\7\2\0\1\7\23\0\7\7"+
-    "\1\142\33\7\7\0\4\7\2\0\1\7\23\0\1\143"+
-    "\42\7\7\0\4\7\2\0\1\7\23\0\1\144\42\7"+
-    "\7\0\4\7\2\0\1\7\23\0\21\7\1\145\21\7"+
-    "\7\0\4\7\2\0\1\7\23\0\1\146\42\7\7\0"+
-    "\4\7\2\0\1\7\23\0\15\7\1\147\25\7\7\0"+
-    "\4\7\2\0\1\7\23\0\21\7\1\150\21\7\7\0"+
-    "\4\7\2\0\1\7\23\0\7\7\1\151\33\7\7\0"+
-    "\4\7\2\0\1\7\23\0\2\7\1\152\40\7\7\0"+
-    "\4\7\2\0\1\7\23\0\2\7\1\153\40\7\7\0"+
-    "\4\7\2\0\1\7\22\0\44\106\1\26\1\27\36\106"+
-    "\51\107\1\154\1\155\31\107\11\0\1\156\41\0\2\110"+
-    "\4\0\1\156\26\0\1\157\2\0\1\157\1\0\1\157"+
-    "\3\0\1\157\3\0\2\157\5\0\1\157\6\0\1\157"+
-    "\13\0\2\157\1\0\1\157\2\0\1\157\75\0\2\112"+
-    "\2\0\1\160\24\0\44\113\2\0\2\113\1\0\13\113"+
-    "\1\0\17\113\1\0\10\7\1\161\32\7\7\0\4\7"+
-    "\2\0\1\7\23\0\7\7\1\162\33\7\7\0\4\7"+
-    "\2\0\1\7\23\0\7\7\1\163\33\7\7\0\4\7"+
-    "\2\0\1\7\23\0\10\7\1\164\32\7\7\0\4\7"+
-    "\2\0\1\7\23\0\11\7\1\165\31\7\7\0\4\7"+
-    "\2\0\1\7\23\0\6\7\1\166\34\7\7\0\4\7"+
-    "\2\0\1\7\23\0\7\7\1\167\33\7\7\0\4\7"+
-    "\2\0\1\7\23\0\21\7\1\170\21\7\7\0\4\7"+
-    "\2\0\1\7\23\0\10\7\1\171\32\7\7\0\4\7"+
-    "\2\0\1\7\23\0\10\7\1\172\32\7\7\0\4\7"+
-    "\2\0\1\7\23\0\1\173\42\7\7\0\4\7\2\0"+
-    "\1\7\23\0\5\7\1\174\35\7\7\0\4\7\2\0"+
-    "\1\7\23\0\11\7\1\130\31\7\7\0\4\7\2\0"+
-    "\1\7\23\0\7\7\1\175\33\7\7\0\4\7\2\0"+
-    "\1\7\23\0\3\7\1\176\37\7\7\0\4\7\2\0"+
-    "\1\7\23\0\11\7\1\177\31\7\7\0\4\7\2\0"+
-    "\1\7\23\0\1\7\1\200\41\7\7\0\4\7\2\0"+
-    "\1\7\23\0\27\7\1\201\13\7\7\0\4\7\2\0"+
-    "\1\7\23\0\3\7\1\202\37\7\7\0\4\7\2\0"+
-    "\1\7\23\0\7\7\1\203\33\7\7\0\4\7\2\0"+
-    "\1\7\23\0\36\7\1\204\4\7\7\0\4\7\2\0"+
-    "\1\7\23\0\36\7\1\205\4\7\7\0\4\7\2\0"+
-    "\1\7\22\0\52\154\1\155\102\154\1\27\1\155\31\154"+
-    "\53\0\2\206\3\0\1\207\5\0\1\207\26\0\1\156"+
-    "\41\0\2\160\4\0\1\156\23\0\12\7\1\210\30\7"+
-    "\7\0\4\7\2\0\1\7\23\0\10\7\1\211\32\7"+
-    "\7\0\4\7\2\0\1\7\23\0\7\7\1\212\33\7"+
-    "\7\0\4\7\2\0\1\7\23\0\40\7\1\213\2\7"+
-    "\7\0\4\7\2\0\1\7\23\0\1\7\1\214\41\7"+
-    "\7\0\4\7\2\0\1\7\23\0\1\7\1\215\41\7"+
-    "\7\0\4\7\2\0\1\7\23\0\12\7\1\216\30\7"+
-    "\7\0\4\7\2\0\1\7\23\0\10\7\1\217\32\7"+
-    "\7\0\4\7\2\0\1\7\23\0\11\7\1\220\31\7"+
-    "\7\0\4\7\2\0\1\7\23\0\2\7\1\221\40\7"+
-    "\7\0\4\7\2\0\1\7\23\0\12\7\1\222\30\7"+
-    "\7\0\4\7\2\0\1\7\23\0\32\7\1\223\1\224"+
-    "\7\7\7\0\4\7\2\0\1\7\23\0\4\7\1\225"+
-    "\36\7\7\0\4\7\2\0\1\7\23\0\30\7\1\226"+
-    "\12\7\7\0\4\7\2\0\1\7\23\0\30\7\1\227"+
-    "\12\7\7\0\4\7\2\0\1\7\75\0\2\206\30\0"+
-    "\14\7\1\230\26\7\7\0\4\7\2\0\1\7\23\0"+
-    "\24\7\1\231\16\7\7\0\4\7\2\0\1\7\23\0"+
-    "\10\7\1\232\32\7\7\0\4\7\2\0\1\7\23\0"+
-    "\3\7\1\233\37\7\7\0\4\7\2\0\1\7\23\0"+
-    "\13\7\1\234\27\7\7\0\4\7\2\0\1\7\23\0"+
-    "\1\7\1\235\41\7\7\0\4\7\2\0\1\7\23\0"+
-    "\12\7\1\236\30\7\7\0\4\7\2\0\1\7\23\0"+
-    "\1\7\1\237\41\7\7\0\4\7\2\0\1\7\23\0"+
-    "\1\240\42\7\7\0\4\7\2\0\1\7\23\0\20\7"+
-    "\1\241\22\7\7\0\4\7\2\0\1\7\23\0\2\7"+
-    "\1\242\40\7\7\0\4\7\2\0\1\7\23\0\2\7"+
-    "\1\243\40\7\7\0\4\7\2\0\1\7\23\0\21\7"+
-    "\1\244\21\7\7\0\4\7\2\0\1\7\23\0\10\7"+
-    "\1\245\32\7\7\0\4\7\2\0\1\7\23\0\11\7"+
-    "\1\246\31\7\7\0\4\7\2\0\1\7\23\0\21\7"+
-    "\1\247\21\7\7\0\4\7\2\0\1\7\23\0\2\7"+
-    "\1\250\40\7\7\0\4\7\2\0\1\7\23\0\1\7"+
-    "\1\251\41\7\7\0\4\7\2\0\1\7\23\0\10\7"+
-    "\1\252\32\7\7\0\4\7\2\0\1\7\23\0\10\7"+
-    "\1\253\32\7\7\0\4\7\2\0\1\7\23\0\20\7"+
-    "\1\254\22\7\7\0\4\7\2\0\1\7\23\0\1\7"+
-    "\1\255\41\7\7\0\4\7\2\0\1\7\23\0\30\7"+
-    "\1\256\12\7\7\0\4\7\2\0\1\7\23\0\10\7"+
-    "\1\257\32\7\7\0\4\7\2\0\1\7\23\0\10\7"+
-    "\1\260\32\7\7\0\4\7\2\0\1\7\23\0\10\7"+
-    "\1\261\32\7\7\0\4\7\2\0\1\7\23\0\2\7"+
-    "\1\262\40\7\7\0\4\7\2\0\1\7\23\0\13\7"+
-    "\1\263\27\7\7\0\4\7\2\0\1\7\23\0\11\7"+
-    "\1\264\31\7\7\0\4\7\2\0\1\7\23\0\10\7"+
-    "\1\265\32\7\7\0\4\7\2\0\1\7\23\0\12\7"+
-    "\1\266\30\7\7\0\4\7\2\0\1\7\22\0";
+    "\1\52\1\53\1\54\1\55\1\56\1\57\107\0\1\7"+
+    "\1\60\12\7\1\61\7\7\1\62\16\7\7\0\4\7"+
+    "\2\0\1\7\25\0\5\7\1\63\35\7\7\0\4\7"+
+    "\2\0\1\7\25\0\12\7\1\64\3\7\1\65\24\7"+
+    "\7\0\4\7\2\0\1\7\25\0\4\7\1\66\36\7"+
+    "\7\0\4\7\2\0\1\7\25\0\43\7\7\0\4\7"+
+    "\2\0\1\7\25\0\4\7\1\67\5\7\1\70\30\7"+
+    "\7\0\4\7\2\0\1\7\25\0\7\7\1\71\12\7"+
+    "\1\72\20\7\7\0\4\7\2\0\1\7\25\0\2\7"+
+    "\1\73\40\7\7\0\4\7\2\0\1\7\25\0\10\7"+
+    "\1\74\32\7\7\0\4\7\2\0\1\7\25\0\4\7"+
+    "\1\75\14\7\1\76\21\7\7\0\4\7\2\0\1\7"+
+    "\25\0\16\7\1\77\24\7\7\0\4\7\2\0\1\7"+
+    "\25\0\4\7\1\100\36\7\7\0\4\7\2\0\1\7"+
+    "\25\0\4\7\1\101\2\7\1\102\33\7\7\0\4\7"+
+    "\2\0\1\7\25\0\12\7\1\103\30\7\7\0\4\7"+
+    "\2\0\1\7\25\0\10\7\1\104\32\7\7\0\4\7"+
+    "\2\0\1\7\25\0\10\7\1\105\32\7\7\0\4\7"+
+    "\2\0\1\7\25\0\21\7\1\106\21\7\7\0\4\7"+
+    "\2\0\1\7\25\0\10\7\1\107\32\7\7\0\4\7"+
+    "\2\0\1\7\25\0\10\7\1\110\32\7\7\0\4\7"+
+    "\2\0\1\7\71\0\1\27\110\0\1\27\106\0\1\111"+
+    "\1\112\106\0\2\33\2\0\1\113\51\0\1\114\27\0"+
+    "\2\33\1\114\1\0\1\113\101\0\2\115\31\0\45\116"+
+    "\1\0\14\116\1\117\1\120\22\116\70\0\1\121\105\0"+
+    "\1\122\110\0\1\123\106\0\1\124\107\0\1\125\107\0"+
+    "\1\126\107\0\1\127\4\0\2\7\1\130\15\7\1\131"+
+    "\22\7\7\0\4\7\2\0\1\7\25\0\25\7\1\132"+
+    "\15\7\7\0\4\7\2\0\1\7\25\0\7\7\1\133"+
+    "\33\7\7\0\4\7\2\0\1\7\25\0\5\7\1\134"+
+    "\35\7\7\0\4\7\2\0\1\7\25\0\1\135\42\7"+
+    "\7\0\4\7\2\0\1\7\25\0\5\7\1\136\35\7"+
+    "\7\0\4\7\2\0\1\7\25\0\4\7\1\137\36\7"+
+    "\7\0\4\7\2\0\1\7\25\0\10\7\1\140\32\7"+
+    "\7\0\4\7\2\0\1\7\25\0\11\7\1\141\31\7"+
+    "\7\0\4\7\2\0\1\7\25\0\2\7\1\142\40\7"+
+    "\7\0\4\7\2\0\1\7\25\0\12\7\1\143\30\7"+
+    "\7\0\4\7\2\0\1\7\25\0\2\7\1\144\40\7"+
+    "\7\0\4\7\2\0\1\7\25\0\12\7\1\145\30\7"+
+    "\7\0\4\7\2\0\1\7\25\0\7\7\1\146\33\7"+
+    "\7\0\4\7\2\0\1\7\25\0\1\147\42\7\7\0"+
+    "\4\7\2\0\1\7\25\0\1\150\42\7\7\0\4\7"+
+    "\2\0\1\7\25\0\1\7\1\151\41\7\7\0\4\7"+
+    "\2\0\1\7\25\0\21\7\1\152\21\7\7\0\4\7"+
+    "\2\0\1\7\25\0\1\153\42\7\7\0\4\7\2\0"+
+    "\1\7\25\0\15\7\1\154\25\7\7\0\4\7\2\0"+
+    "\1\7\25\0\21\7\1\155\21\7\7\0\4\7\2\0"+
+    "\1\7\25\0\7\7\1\156\33\7\7\0\4\7\2\0"+
+    "\1\7\25\0\2\7\1\157\40\7\7\0\4\7\2\0"+
+    "\1\7\25\0\2\7\1\160\40\7\7\0\4\7\2\0"+
+    "\1\7\24\0\44\111\1\26\1\27\40\111\51\112\1\161"+
+    "\1\162\33\112\11\0\1\163\41\0\2\113\4\0\1\163"+
+    "\30\0\1\164\2\0\1\164\1\0\1\164\3\0\1\164"+
+    "\3\0\2\164\5\0\1\164\6\0\1\164\13\0\2\164"+
+    "\1\0\1\164\2\0\1\164\77\0\2\115\2\0\1\165"+
+    "\26\0\44\116\2\0\2\116\1\0\13\116\1\0\21\116"+
+    "\1\0\10\7\1\166\32\7\7\0\4\7\2\0\1\7"+
+    "\25\0\7\7\1\167\33\7\7\0\4\7\2\0\1\7"+
+    "\25\0\7\7\1\170\33\7\7\0\4\7\2\0\1\7"+
+    "\25\0\7\7\1\171\33\7\7\0\4\7\2\0\1\7"+
+    "\25\0\10\7\1\172\32\7\7\0\4\7\2\0\1\7"+
+    "\25\0\11\7\1\173\31\7\7\0\4\7\2\0\1\7"+
+    "\25\0\6\7\1\174\34\7\7\0\4\7\2\0\1\7"+
+    "\25\0\7\7\1\175\33\7\7\0\4\7\2\0\1\7"+
+    "\25\0\21\7\1\176\21\7\7\0\4\7\2\0\1\7"+
+    "\25\0\10\7\1\177\32\7\7\0\4\7\2\0\1\7"+
+    "\25\0\10\7\1\200\32\7\7\0\4\7\2\0\1\7"+
+    "\25\0\1\201\42\7\7\0\4\7\2\0\1\7\25\0"+
+    "\5\7\1\202\35\7\7\0\4\7\2\0\1\7\25\0"+
+    "\11\7\1\134\31\7\7\0\4\7\2\0\1\7\25\0"+
+    "\7\7\1\203\33\7\7\0\4\7\2\0\1\7\25\0"+
+    "\3\7\1\204\37\7\7\0\4\7\2\0\1\7\25\0"+
+    "\11\7\1\205\31\7\7\0\4\7\2\0\1\7\25\0"+
+    "\11\7\1\206\31\7\7\0\4\7\2\0\1\7\25\0"+
+    "\1\7\1\207\41\7\7\0\4\7\2\0\1\7\25\0"+
+    "\27\7\1\210\13\7\7\0\4\7\2\0\1\7\25\0"+
+    "\3\7\1\211\37\7\7\0\4\7\2\0\1\7\25\0"+
+    "\7\7\1\212\33\7\7\0\4\7\2\0\1\7\25\0"+
+    "\36\7\1\213\4\7\7\0\4\7\2\0\1\7\25\0"+
+    "\36\7\1\214\4\7\7\0\4\7\2\0\1\7\24\0"+
+    "\52\161\1\162\104\161\1\27\1\162\33\161\53\0\2\215"+
+    "\3\0\1\216\5\0\1\216\30\0\1\163\41\0\2\165"+
+    "\4\0\1\163\25\0\12\7\1\217\30\7\7\0\4\7"+
+    "\2\0\1\7\25\0\5\7\1\220\35\7\7\0\4\7"+
+    "\2\0\1\7\25\0\10\7\1\221\32\7\7\0\4\7"+
+    "\2\0\1\7\25\0\7\7\1\222\33\7\7\0\4\7"+
+    "\2\0\1\7\25\0\40\7\1\223\2\7\7\0\4\7"+
+    "\2\0\1\7\25\0\1\7\1\224\41\7\7\0\4\7"+
+    "\2\0\1\7\25\0\1\7\1\225\41\7\7\0\4\7"+
+    "\2\0\1\7\25\0\12\7\1\226\30\7\7\0\4\7"+
+    "\2\0\1\7\25\0\10\7\1\227\32\7\7\0\4\7"+
+    "\2\0\1\7\25\0\2\7\1\230\40\7\7\0\4\7"+
+    "\2\0\1\7\25\0\11\7\1\231\31\7\7\0\4\7"+
+    "\2\0\1\7\25\0\2\7\1\232\40\7\7\0\4\7"+
+    "\2\0\1\7\25\0\12\7\1\233\30\7\7\0\4\7"+
+    "\2\0\1\7\25\0\32\7\1\234\1\235\7\7\7\0"+
+    "\4\7\2\0\1\7\25\0\4\7\1\236\36\7\7\0"+
+    "\4\7\2\0\1\7\25\0\30\7\1\237\12\7\7\0"+
+    "\4\7\2\0\1\7\25\0\30\7\1\240\12\7\7\0"+
+    "\4\7\2\0\1\7\77\0\2\215\32\0\14\7\1\241"+
+    "\26\7\7\0\4\7\2\0\1\7\25\0\3\7\1\242"+
+    "\37\7\7\0\4\7\2\0\1\7\25\0\24\7\1\243"+
+    "\16\7\7\0\4\7\2\0\1\7\25\0\10\7\1\244"+
+    "\32\7\7\0\4\7\2\0\1\7\25\0\3\7\1\245"+
+    "\37\7\7\0\4\7\2\0\1\7\25\0\13\7\1\246"+
+    "\27\7\7\0\4\7\2\0\1\7\25\0\1\7\1\247"+
+    "\41\7\7\0\4\7\2\0\1\7\25\0\12\7\1\250"+
+    "\30\7\7\0\4\7\2\0\1\7\25\0\1\7\1\251"+
+    "\41\7\7\0\4\7\2\0\1\7\25\0\1\252\42\7"+
+    "\7\0\4\7\2\0\1\7\25\0\20\7\1\253\22\7"+
+    "\7\0\4\7\2\0\1\7\25\0\2\7\1\254\40\7"+
+    "\7\0\4\7\2\0\1\7\25\0\2\7\1\255\40\7"+
+    "\7\0\4\7\2\0\1\7\25\0\21\7\1\256\21\7"+
+    "\7\0\4\7\2\0\1\7\25\0\10\7\1\257\32\7"+
+    "\7\0\4\7\2\0\1\7\25\0\10\7\1\260\32\7"+
+    "\7\0\4\7\2\0\1\7\25\0\11\7\1\261\31\7"+
+    "\7\0\4\7\2\0\1\7\25\0\21\7\1\262\21\7"+
+    "\7\0\4\7\2\0\1\7\25\0\2\7\1\263\40\7"+
+    "\7\0\4\7\2\0\1\7\25\0\1\7\1\264\41\7"+
+    "\7\0\4\7\2\0\1\7\25\0\10\7\1\265\32\7"+
+    "\7\0\4\7\2\0\1\7\25\0\10\7\1\266\32\7"+
+    "\7\0\4\7\2\0\1\7\25\0\20\7\1\267\22\7"+
+    "\7\0\4\7\2\0\1\7\25\0\1\7\1\270\41\7"+
+    "\7\0\4\7\2\0\1\7\25\0\30\7\1\271\12\7"+
+    "\7\0\4\7\2\0\1\7\25\0\10\7\1\272\32\7"+
+    "\7\0\4\7\2\0\1\7\25\0\10\7\1\273\32\7"+
+    "\7\0\4\7\2\0\1\7\25\0\10\7\1\274\32\7"+
+    "\7\0\4\7\2\0\1\7\25\0\2\7\1\275\40\7"+
+    "\7\0\4\7\2\0\1\7\25\0\13\7\1\276\27\7"+
+    "\7\0\4\7\2\0\1\7\25\0\11\7\1\277\31\7"+
+    "\7\0\4\7\2\0\1\7\25\0\10\7\1\300\32\7"+
+    "\7\0\4\7\2\0\1\7\25\0\12\7\1\301\30\7"+
+    "\7\0\4\7\2\0\1\7\24\0";
 
   private static int [] zzUnpackTrans() {
-    int [] result = new int[9316];
+    int [] result = new int[10080];
     int offset = 0;
     offset = zzUnpackTrans(ZZ_TRANS_PACKED_0, offset, result);
     return result;
@@ -360,12 +371,12 @@ public class LexicalScanner implements java_cup.runtime.Scanner {
 
   private static final String ZZ_ATTRIBUTE_PACKED_0 =
     "\1\0\1\11\24\1\1\11\2\1\1\11\2\1\1\11"+
-    "\11\1\1\11\1\1\1\11\1\1\3\11\33\1\3\0"+
-    "\1\11\1\0\7\11\27\1\3\0\1\1\1\0\26\1"+
-    "\1\0\57\1";
+    "\12\1\1\11\1\1\1\11\1\1\4\11\34\1\3\0"+
+    "\1\11\1\0\7\11\31\1\3\0\1\1\1\0\30\1"+
+    "\1\0\63\1";
 
   private static int [] zzUnpackAttribute() {
-    int [] result = new int[182];
+    int [] result = new int[193];
     int offset = 0;
     offset = zzUnpackAttribute(ZZ_ATTRIBUTE_PACKED_0, offset, result);
     return result;
@@ -488,7 +499,7 @@ private String isError(String token, int line, int column, int length, String er
     char [] map = new char[0x110000];
     int i = 0;  /* index in packed string  */
     int j = 0;  /* index in unpacked array */
-    while (i < 214) {
+    while (i < 216) {
       int  count = packed.charAt(i++);
       char value = packed.charAt(i++);
       do map[j++] = value; while (--count > 0);
@@ -856,219 +867,239 @@ private String isError(String token, int line, int column, int length, String er
           case 1: 
             { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "Unrecognized char", true)); /* It's error so it doesn't return nothing */
             }
-          case 55: break;
+          case 60: break;
           case 2: 
             { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "T_Identifier", false)); return symbol(sym.ident);
             }
-          case 56: break;
+          case 61: break;
           case 3: 
             { /* ignore */
             }
-          case 57: break;
+          case 62: break;
           case 4: 
             { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return symbol(sym.ArithmeticOperators);
             }
-          case 58: break;
+          case 63: break;
           case 5: 
             { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeNumbers(yytext(), "T_IntConstant"), false)); return symbol(sym.integerConstant);
             }
-          case 59: break;
+          case 64: break;
           case 6: 
             { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return symbol(sym.dot);
             }
-          case 60: break;
+          case 65: break;
           case 7: 
             { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return symbol(sym.negative);
             }
-          case 61: break;
+          case 66: break;
           case 8: 
             { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return symbol(sym.sum);
             }
-          case 62: break;
+          case 67: break;
           case 9: 
-            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return symbol(sym.ComparisonOperators);
+            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return symbol(sym.LessThanSign);
             }
-          case 63: break;
+          case 68: break;
           case 10: 
             { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return symbol(sym.assignment);
             }
-          case 64: break;
-          case 11: 
-            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return symbol(sym.denial);
-            }
-          case 65: break;
-          case 12: 
-            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return symbol(sym.OpeningParenthesis);
-            }
-          case 66: break;
-          case 13: 
-            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return symbol(sym.ClosedParenthesis);
-            }
-          case 67: break;
-          case 14: 
-            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return symbol(sym.OpeningBracket);
-            }
-          case 68: break;
-          case 15: 
-            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return symbol(sym.ClosedBracket);
-            }
           case 69: break;
-          case 16: 
-            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return symbol(sym.OpeningCurlyBracket);
+          case 11: 
+            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return symbol(sym.GreaterThanSign);
             }
           case 70: break;
-          case 17: 
-            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return symbol(sym.ClosedCurlyBracket);
+          case 12: 
+            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return symbol(sym.denial);
             }
           case 71: break;
-          case 18: 
-            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return symbol(sym.pyc);
+          case 13: 
+            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return symbol(sym.OpeningParenthesis);
             }
           case 72: break;
-          case 19: 
-            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return symbol(sym.comma);
+          case 14: 
+            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return symbol(sym.ClosedParenthesis);
             }
           case 73: break;
-          case 20: 
-            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return symbol(sym.cIf);
+          case 15: 
+            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return symbol(sym.OpeningBracket);
             }
           case 74: break;
-          case 21: 
-            { this.tokens.add(new Yytoken("", yyline, yycolumn, "The character '*/' wasn't found", true)); /* It's error so it doesn't return nothing */
+          case 16: 
+            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return symbol(sym.ClosedBracket);
             }
           case 75: break;
-          case 22: 
-            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeNumbers(yytext(), "T_DoubleConstant"), false)); return symbol(sym.doubleConstant);
+          case 17: 
+            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return symbol(sym.OpeningCurlyBracket);
             }
           case 76: break;
-          case 23: 
-            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeNumbers(yytext(), "T_String"), false)); return symbol(sym.stringConstant);
+          case 18: 
+            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return symbol(sym.ClosedCurlyBracket);
             }
           case 77: break;
-          case 24: 
-            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return symbol(sym.equality);
+          case 19: 
+            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return symbol(sym.pyc);
             }
           case 78: break;
-          case 25: 
-            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return symbol(sym.and);
+          case 20: 
+            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return symbol(sym.comma);
             }
           case 79: break;
-          case 26: 
-            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return symbol(sym.or);
+          case 21: 
+            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return symbol(sym.PoundSign);
             }
           case 80: break;
-          case 27: 
-            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return symbol(sym.Parenthesis);
+          case 22: 
+            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return symbol(sym.cIf);
             }
           case 81: break;
-          case 28: 
-            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return symbol(sym.Brackets);
+          case 23: 
+            { this.tokens.add(new Yytoken("", yyline, yycolumn, "The character '*/' wasn't found", true)); /* It's error so it doesn't return nothing */
             }
           case 82: break;
-          case 29: 
-            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return symbol(sym.CurlyBrackets);
+          case 24: 
+            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeNumbers(yytext(), "T_DoubleConstant"), false)); return symbol(sym.doubleConstant);
             }
           case 83: break;
-          case 30: 
-            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return symbol(sym.INT);
+          case 25: 
+            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeNumbers(yytext(), "T_String"), false)); return symbol(sym.stringConstant);
             }
           case 84: break;
-          case 31: 
-            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return symbol(sym.lFor);
+          case 26: 
+            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return symbol(sym.ComparisonOperators);
             }
           case 85: break;
-          case 32: 
-            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return symbol(sym.sNew);
+          case 27: 
+            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return symbol(sym.equality);
             }
           case 86: break;
-          case 33: 
-            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return symbol(sym.sNull);
+          case 28: 
+            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return symbol(sym.and);
             }
           case 87: break;
-          case 34: 
-            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "T_LogicalConstant", false)); return symbol(sym.boolConstant);
+          case 29: 
+            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return symbol(sym.or);
             }
           case 88: break;
-          case 35: 
-            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return symbol(sym.sThis);
+          case 30: 
+            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return symbol(sym.Parenthesis);
             }
           case 89: break;
-          case 36: 
-            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return symbol(sym.BOOL);
+          case 31: 
+            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return symbol(sym.Brackets);
             }
           case 90: break;
-          case 37: 
-            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return symbol(sym.cElse);
+          case 32: 
+            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return symbol(sym.CurlyBrackets);
             }
           case 91: break;
-          case 38: 
-            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return symbol(sym.sVoid);
+          case 33: 
+            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return symbol(sym.INT);
             }
           case 92: break;
-          case 39: 
-            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return symbol(sym.sBreak);
+          case 34: 
+            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return symbol(sym.lFor);
             }
           case 93: break;
-          case 40: 
-            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return symbol(sym.lWhile);
+          case 35: 
+            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return symbol(sym.sNew);
             }
           case 94: break;
-          case 41: 
-            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return symbol(sym.sClass);
+          case 36: 
+            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return symbol(sym.sNull);
             }
           case 95: break;
-          case 42: 
-            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return symbol(sym.sPrint);
+          case 37: 
+            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "T_LogicalConstant", false)); return symbol(sym.boolConstant);
             }
           case 96: break;
-          case 43: 
-            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return symbol(sym.DOUBLE);
+          case 38: 
+            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return symbol(sym.sThis);
             }
           case 97: break;
-          case 44: 
-            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return symbol(sym.STRING);
+          case 39: 
+            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return symbol(sym.BOOL);
             }
           case 98: break;
-          case 45: 
-            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return symbol(sym.sReturn);
+          case 40: 
+            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return symbol(sym.cElse);
             }
           case 99: break;
-          case 46: 
-            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return symbol(sym.sMalloc);
+          case 41: 
+            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return symbol(sym.sVoid);
             }
           case 100: break;
-          case 47: 
-            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return symbol(sym.sExtends);
+          case 42: 
+            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return symbol(sym.sBreak);
             }
           case 101: break;
-          case 48: 
-            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return symbol(sym.sGetByte);
+          case 43: 
+            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return symbol(sym.lWhile);
             }
           case 102: break;
-          case 49: 
-            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return symbol(sym.sSetByte);
+          case 44: 
+            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return symbol(sym.sConst);
             }
           case 103: break;
-          case 50: 
-            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return symbol(sym.sNewArray);
+          case 45: 
+            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return symbol(sym.sClass);
             }
           case 104: break;
-          case 51: 
-            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return symbol(sym.sReadLine);
+          case 46: 
+            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return symbol(sym.sPrint);
             }
           case 105: break;
-          case 52: 
-            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return symbol(sym.sInterface);
+          case 47: 
+            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return symbol(sym.DOUBLE);
             }
           case 106: break;
-          case 53: 
-            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return symbol(sym.sImplements);
+          case 48: 
+            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return symbol(sym.STRING);
             }
           case 107: break;
-          case 54: 
-            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return symbol(sym.sReadInteger);
+          case 49: 
+            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return symbol(sym.sReturn);
             }
           case 108: break;
+          case 50: 
+            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return symbol(sym.sMalloc);
+            }
+          case 109: break;
+          case 51: 
+            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return symbol(sym.sInclude);
+            }
+          case 110: break;
+          case 52: 
+            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return symbol(sym.sExtends);
+            }
+          case 111: break;
+          case 53: 
+            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return symbol(sym.sGetByte);
+            }
+          case 112: break;
+          case 54: 
+            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return symbol(sym.sSetByte);
+            }
+          case 113: break;
+          case 55: 
+            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return symbol(sym.sNewArray);
+            }
+          case 114: break;
+          case 56: 
+            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return symbol(sym.sReadLine);
+            }
+          case 115: break;
+          case 57: 
+            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return symbol(sym.sInterface);
+            }
+          case 116: break;
+          case 58: 
+            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return symbol(sym.sImplements);
+            }
+          case 117: break;
+          case 59: 
+            { this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return symbol(sym.sReadInteger);
+            }
+          case 118: break;
           default:
             zzScanError(ZZ_NO_MATCH);
         }

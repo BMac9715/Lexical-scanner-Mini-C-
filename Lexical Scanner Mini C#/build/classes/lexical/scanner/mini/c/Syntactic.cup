@@ -4,7 +4,12 @@ package lexical.scanner.mini.c;
 import java.util.ArrayList;
 import java_cup.runtime.Symbol;
 
-parser code {:
+action code{:
+    public SymbolTable symTable = new SymbolTable();
+:}
+
+
+parser code {:    
     public ArrayList<String> SyntacticErrors = new ArrayList<String>();
     public int count = 0;
 
@@ -24,19 +29,26 @@ parser code {:
 /*  Symbol Lists  */
 
 // Terminals
-terminal ident, pyc, INT, DOUBLE, BOOL, STRING, OpeningBracket, ClosedBracket, OpeningParenthesis, ClosedParenthesis, sVoid, comma, sClass, OpeningCurlyBracket, ClosedCurlyBracket, sExtends, sImplements, sInterface,
+terminal String ident, pyc, INT, DOUBLE, BOOL, STRING, OpeningBracket, ClosedBracket, OpeningParenthesis, ClosedParenthesis, sVoid, comma, sClass, OpeningCurlyBracket, ClosedCurlyBracket, sExtends, sImplements, sInterface,
 cIf, cElse, lWhile, lFor, sReturn, sBreak, sPrint, assignment, sThis, sNew, sNewArray, sReadInteger, sMalloc, dot, sGetByte, sSetByte, sNull, sReadLine, integerConstant, doubleConstant, boolConstant, 
-stringConstant, ComparisonOperators, equality, negative, sum, ArithmeticOperators, denial, Brackets, and, or, Parenthesis, CurlyBrackets;
+stringConstant, ComparisonOperators, equality, negative, sum, ArithmeticOperators, denial, Brackets, and, or, Parenthesis, CurlyBrackets, sInclude, PoundSign, LessThanSign, GreaterThanSign, sConst;
  
 // Non Terminals
-non terminal Program, ProgramA, Decl, VariableDecl, VariableDeclAux, Variable, Type, FunctionDecl, Formals, RepeatVariable, ClassDecl, ExtIdent, ImpIdent, MultipleIdents,
-Field, RepeatableField, InterfaceDecl, Prototype, RepeatablePrototype, StmtBlock, Stmt, StmtAux, IfStmt, ElseStmt, WhileStmt, ForStmt, ReturnStmt, BreakStmt, PrintStmt, Expr, ExprOZ, 
-ExprRepeat, LValue, Call, LibCall, Actuals, Constant;
+non terminal Variable Variable, Constante;
+non terminal String Type;
+non terminal Parametro Formals, RepeatVariable;
+non terminal ExtImp ExtIdent, ImpIdent, MultipleIdents;
+non terminal Expresion Expr, Constant, LValue, Call;
+
+non terminal Program, DeclA, DeclB, Decl, VariableDecl, VariableDeclAux, FunctionDecl, ClassDecl,
+Field, RepeatableField, InterfaceDecl, Prototype, RepeatablePrototype, StmtBlock, Stmt, StmtAux, IfStmt,
+ElseStmt, WhileStmt, ForStmt, ReturnStmt, BreakStmt, PrintStmt, ExprOZ, ExprRepeat,
+LibCall, Actuals, IncludeDecl, Includes;
 
 /*  Precedence and Associativity declarations   */
 precedence left assignment;
 precedence left or,and;
-precedence nonassoc ComparisonOperators,equality;
+precedence nonassoc ComparisonOperators, equality, GreaterThanSign, LessThanSign;
 precedence left sum,negative,ArithmeticOperators;
 precedence nonassoc denial;
 precedence nonassoc OpeningBracket,dot;
@@ -45,55 +57,270 @@ precedence nonassoc cElse;
 /* Grammar */
 start with Program;
 
-Program ::= Decl ProgramA;
-ProgramA ::= ProgramA Decl| /* epsilon */;
+Program ::= DeclB DeclA
+             ;  
+DeclA ::= DeclA Decl| /* epsilon */;
 
-Decl ::=  VariableDecl| 
-          FunctionDecl| 
-          ClassDecl| 
-          InterfaceDecl| 
-          error pyc| 
-          error ClosedCurlyBracket;
+DeclB ::= Includes IncludeDecl 
+        | Decl 
+        ;
 
-VariableDecl ::= Variable pyc;
+Decl ::=  VariableDecl
+        | FunctionDecl 
+        | ClassDecl 
+        | InterfaceDecl
+        | error pyc 
+        | error ClosedCurlyBracket;
 
-Variable ::= Type ident;
+IncludeDecl ::= IncludeDecl Includes | /* epsilon */;
 
-Type ::=  INT
-        |DOUBLE
-        |BOOL
-        |STRING
-        |ident
-        |Type Brackets;
+Includes ::= PoundSign sInclude LessThanSign ident dot ident GreaterThanSign|
+             PoundSign sInclude LessThanSign sConst dot ident GreaterThanSign;
+             
+VariableDecl ::= Variable:v 
+                {: symTable.AddNewSymbol(v.identificador, v.valor, "Var", v.tipo, v.line, v.column); :}
+                 pyc
+                
+                | Constante:c
+                 {: symTable.AddNewSymbol(c.identificador, c.valor, "Const", c.tipo, c.line, c.column); :}
+                 pyc
+                
+                ;
 
-FunctionDecl ::= Type ident OpeningParenthesis Formals ClosedParenthesis StmtBlock
-                |sVoid ident OpeningParenthesis Formals ClosedParenthesis StmtBlock
-                |Type ident Parenthesis StmtBlock
-                |sVoid ident Parenthesis StmtBlock;
+Variable ::= Type:t ident:i
+             {: 
+                RESULT = new Variable();
+                if(t.equals("int") || t.equals("double") || t.equals("bool") || t.equals("string")){
+                    RESULT.identificador = String.valueOf(i);
+                    RESULT.valor = null;
+                    RESULT.tipo = String.valueOf(t);
+                    RESULT.clase = null;
+                    RESULT.line = ileft;
+                    RESULT.column = iright;
+                }else{
+                    if(t.equals("Array-int") || t.equals("Array-double") || t.equals("Array-bool") || t.equals("Array-string")){
+                        RESULT.identificador = String.valueOf(i);
+                        RESULT.valor = null;
+                        RESULT.tipo = String.valueOf(t);
+                        RESULT.clase = null;
+                        RESULT.line = ileft;
+                        RESULT.column = iright;
+                    }
+                    else{
+                        //Metodo que crea en el ambito actual la referencia del Tipo instanciado
+                        if(symTable.VerifyClass(1, t)){
+                            if(symTable.AddNewSymbol(String.valueOf(i), null, "Object", t, ileft, iright)){
+                                int refAmbito = symTable.GetLocalAmbit(t, 0);
+                                symTable.CreateInstancia(i, refAmbito, tleft, tright);
+                            }
+                            
+                        }
+                    }
+                }
+                
 
-Formals ::= Variable RepeatVariable| /* epsilon */;
-RepeatVariable ::= comma Variable RepeatVariable| /* epsilon */;
+             :}
+             ;
 
-ClassDecl ::= sClass ident ExtIdent ImpIdent OpeningCurlyBracket RepeatableField ClosedCurlyBracket
-            | sClass ident ExtIdent ImpIdent CurlyBrackets;
-ExtIdent ::= sExtends ident| /* epsilon */;
-ImpIdent ::= sImplements MultipleIdents| /* epsilon */;
-MultipleIdents ::= ident|MultipleIdents comma ident;
+Constante ::= sConst Type:t ident:i
+              {:
+                RESULT = new Variable();
+                RESULT.identificador = String.valueOf(i);
+                RESULT.valor = null;
+                RESULT.tipo = String.valueOf(t);
+                RESULT.clase = null;
+                RESULT.line = ileft;
+                RESULT.column = iright;
+              :}
+               ;
+
+Type ::=  INT:r {: RESULT = String.valueOf(r);:}
+        |DOUBLE:r {: RESULT = String.valueOf(r);:}
+        |BOOL:r {: RESULT = String.valueOf(r);:}
+        |STRING:r {: RESULT = String.valueOf(r);:}
+        |ident:r {: RESULT = String.valueOf(r);:}
+        |Type:t Brackets {: RESULT = String.valueOf("Array-" + String.valueOf(t)); :}
+        ;
+
+FunctionDecl ::=
+                Type:t ident:i OpeningParenthesis {: symTable.CreateNewSymTable(String.valueOf(i), "Func", String.valueOf(t)); :} Formals:f ClosedParenthesis StmtBlock
+                {:
+                    symTable.DeleteAmbitFunction();
+                    symTable.AddNewSymbol(String.valueOf(i), null, "Func", null, f.numParameters, f.varsTypes, String.valueOf(t), ileft, iright);    
+                :}
+                |
+                sVoid ident:i OpeningParenthesis {: symTable.CreateNewSymTable(String.valueOf(i), "Proc", null); :} Formals:f ClosedParenthesis StmtBlock
+                {:
+                    symTable.DeleteAmbitFunction();
+                    symTable.AddNewSymbol(String.valueOf(i), null, "Proc", null, f.numParameters, f.varsTypes, null, ileft, iright);
+                :}
+                |
+                Type:t ident:i Parenthesis {: symTable.CreateNewSymTable(String.valueOf(i), "Func", String.valueOf(t)); :} StmtBlock
+                {:
+                    symTable.DeleteAmbitFunction();
+                    symTable.AddNewSymbol(String.valueOf(i), null, "Func", null, 0, "", String.valueOf(t), ileft, iright);
+                :}
+                |
+                sVoid ident:i Parenthesis {: symTable.CreateNewSymTable(String.valueOf(i), "Proc", null); :} StmtBlock
+                {:
+                    symTable.DeleteAmbitFunction();
+                    symTable.AddNewSymbol(String.valueOf(i), null, "Proc", null, 0, "", null, ileft, iright);
+                :}
+                ;
+
+Formals ::= Variable:v RepeatVariable:rv
+            {:
+                RESULT = new Parametro();
+                RESULT.varsTypes = v.tipo + rv.varsTypes;
+                RESULT.numParameters = 1 + rv.numParameters;
+                symTable.AddNewSymbol(v.identificador, v.valor, "Var-Param", v.tipo, v.line, v.column);
+            :}
+            | /* epsilon */
+            {:
+                RESULT = new Parametro();
+                RESULT.varsTypes = "";
+                RESULT.numParameters = 0;
+            :}
+            ;
+
+RepeatVariable ::= comma Variable:v RepeatVariable:rv
+                {:
+                    RESULT = new Parametro();
+                    RESULT.varsTypes = ", " + v.tipo + rv.varsTypes;
+                    RESULT.numParameters = 1 + rv.numParameters;
+                    symTable.AddNewSymbol(v.identificador, v.valor, "Var-Parm", v.tipo, v.line, v.column);
+                :}
+                | /* epsilon */
+                {:
+                    RESULT = new Parametro();
+                    RESULT.varsTypes = "";
+                    RESULT.numParameters = 0;
+                :}
+                ;
+
+ClassDecl ::= 
+            sClass ident:id ExtIdent:ext ImpIdent:imp OpeningCurlyBracket {: symTable.CreateNewSymTable(String.valueOf(id), "Class", null); :} RepeatableField ClosedCurlyBracket
+            {:
+                  
+                /*Verifica si las clases heredadas e interfaces existen*/
+                if(ext.exists){
+                    if(imp.exists){
+                        int localAmbit = symTable.DeleteAmbitClass(); 
+                        symTable.AddNewSymbol(String.valueOf(id),"Class", idleft, idright, localAmbit);
+                    }
+                    else{
+                        symTable.DeleteAmbitFunction();
+                    }
+                }
+                else{
+                    symTable.DeleteAmbitFunction();
+                }
+            :}
+            | 
+            sClass ident:id ExtIdent:ext ImpIdent:imp CurlyBrackets
+            {:
+                /*Verifica que las clases heredadas e interfaces existan*/
+                if(ext.exists){
+                    if(imp.exists){
+                        symTable.AddNewSymbol(String.valueOf(id),"Class", idleft, idright);
+                    }
+                }
+            :}
+            ;
+
+ExtIdent ::= sExtends ident:id
+            {:
+                RESULT = new ExtImp();
+                if(symTable.VerifyClass(1, String.valueOf(id))){
+                    RESULT.exists = true;
+                }
+                else{
+                    RESULT.exists = false;
+                    symTable.AddError("No existe una definicion para la clase \'" +  String.valueOf(id) + "\'.", idleft, idright);
+                }
+            :}
+            | /* epsilon */
+            {:
+                RESULT = new ExtImp();
+                RESULT.exists = true;
+            :}
+            ;
+
+ImpIdent ::= sImplements MultipleIdents:m1
+            {:
+                RESULT = new ExtImp();
+                RESULT.exists = m1.exists;
+            :}
+            | /* epsilon */
+            {:
+                RESULT = new ExtImp();
+                RESULT.exists = true;
+            :}
+            ;
+
+MultipleIdents ::= ident: id
+                {:
+                    RESULT = new ExtImp();
+                    if(symTable.VerifyClass(2, String.valueOf(id))){
+                        RESULT.exists = true;
+                    }
+                    else{
+                        RESULT.exists = false;
+                        symTable.AddError("No existe una definicion para la interfaz \'" + id + "\'.", idleft, idright);
+                    }
+                :}
+                |MultipleIdents:m1 comma ident:id
+                {:
+                    RESULT = new ExtImp();
+                    if(symTable.VerifyClass(2, String.valueOf(id))){
+                        RESULT.exists = m1.exists;
+                    }
+                    else{
+                        RESULT.exists = false;
+                        symTable.AddError("No existe una definicion para la interfaz \'" + id + "\'.", idleft, idright);                  
+                    }
+                :}
+                ;
                 
 RepeatableField ::= RepeatableField Field| /* epsilon */;
 Field ::= VariableDecl | FunctionDecl;
 
-InterfaceDecl ::= sInterface ident OpeningCurlyBracket RepeatablePrototype ClosedCurlyBracket
-                | sInterface ident CurlyBrackets;
+InterfaceDecl ::= sInterface ident:id OpeningCurlyBracket {: symTable.CreateNewSymTable(String.valueOf(id), "Interface", null); :} RepeatablePrototype ClosedCurlyBracket
+                {:
+                    symTable.DeleteAmbitFunction();
+                    symTable.AddNewSymbol(String.valueOf(id), "Interface", idleft, idright);
+                :}
+                | sInterface ident:id CurlyBrackets
+                {:
+                    symTable.AddNewSymbol(String.valueOf(id), "Interface", idleft, idright);
+                :}
+                ;
 
 RepeatablePrototype ::= RepeatablePrototype Prototype| /* epsilon */;
-Prototype ::= Type ident OpeningParenthesis Formals ClosedParenthesis pyc
-            |sVoid ident OpeningParenthesis Formals ClosedParenthesis pyc
-            |Type ident Parenthesis pyc
-            |sVoid ident Parenthesis pyc;
+Prototype ::= Type:t ident:id OpeningParenthesis {: symTable.CreateNewSymTable(String.valueOf(id), "Func", String.valueOf(t)); :} Formals:f ClosedParenthesis pyc
+            {:
+                symTable.DeleteAmbitFunction();
+                symTable.AddNewSymbol(String.valueOf(id), null, "Prototype", null, f.numParameters, f.varsTypes, String.valueOf(t), idleft, idright);    
+            :}
+            |sVoid ident:id OpeningParenthesis {: symTable.CreateNewSymTable(String.valueOf(id), "Func", null); :} Formals:f ClosedParenthesis pyc
+            {:
+                symTable.DeleteAmbitFunction();
+                symTable.AddNewSymbol(String.valueOf(id), null, "Prototype", null, f.numParameters, f.varsTypes, null, idleft, idright);                
+            :}
+            |Type:t ident:id Parenthesis pyc
+            {:
+                symTable.AddNewSymbol(String.valueOf(id), null, "Prototype", null, 0, null, String.valueOf(t), idleft, idright);
+            :}
+            |sVoid ident:id Parenthesis pyc
+            {:
+                symTable.AddNewSymbol(String.valueOf(id), null, "Prototype", null, 0, null, null, idleft, idright);
+            :}
+            ;
 
 StmtBlock ::= OpeningCurlyBracket VariableDeclAux StmtAux ClosedCurlyBracket
-            | CurlyBrackets;
+            | CurlyBrackets
+            ;
+
 VariableDeclAux ::= VariableDeclAux VariableDecl| /* epsilon */;
 StmtAux ::= Stmt StmtAux| /* epsilon */ ;
 
@@ -106,10 +333,23 @@ Stmt ::= Expr pyc
         |ReturnStmt 
         |PrintStmt 
         |StmtBlock;
+
 ExprOZ ::= Expr| /* epsilon */ ;
 
-IfStmt ::= cIf OpeningParenthesis Expr ClosedParenthesis Stmt ElseStmt;
-ElseStmt ::= cElse Stmt| /* epsilon */ ;
+IfStmt ::= cIf OpeningParenthesis{: symTable.CreateNewSymTable("if","Stmt",null);:} Expr ClosedParenthesis Stmt
+{:
+    symTable.DeleteAmbitFunction();
+:}
+ElseStmt
+;
+ElseStmt ::= cElse{:
+            symTable.CreateNewSymTable("else", "Stmt", null);
+            :}
+             Stmt{:
+                symTable.DeleteAmbitFunction();
+             :}
+             | /* epsilon */ 
+             ;
 
 WhileStmt ::= lWhile OpeningParenthesis Expr ClosedParenthesis Stmt;
 
@@ -122,35 +362,593 @@ BreakStmt ::= sBreak pyc;
 PrintStmt ::= sPrint OpeningParenthesis Expr ExprRepeat ClosedParenthesis pyc;
 ExprRepeat ::= comma Expr ExprRepeat| /* epsilon */ ;
 
-Expr ::= LValue assignment Expr
-        |Constant 
-        |LValue 
-        |sThis
-        |Call 
-        |OpeningParenthesis Expr ClosedParenthesis
-        |Expr ArithmeticOperators Expr
-        |Expr sum Expr
-        |Expr negative Expr
-        |Expr and Expr 
-        |Expr or Expr
-        |Expr equality Expr
-        |Expr ComparisonOperators Expr
-        |negative Expr 
-        |denial Expr
+Expr ::= LValue:lv assignment Expr:e
+        {: 
+            if(lv.exists){
+                symTable.AddValueToElement(lv.id, e.value, e.dType, lvleft, lvright);
+            }
+        :}
+        |Constant:c
+        {:
+            RESULT = new Expresion();
+            RESULT.value = c.value;
+            RESULT.dType = c.dType;
+            RESULT.type = c.type;
+            RESULT.exists = true;
+        :}
+        |LValue:lv
+        {:
+            RESULT = new Expresion();
+            RESULT.id = lv.id;
+            RESULT.value = lv.value;
+            RESULT.exists = lv.exists;
+            RESULT.type = lv.type;
+            RESULT.dType = lv.dType;
+        :}
+        |sThis:t
+        {:
+            RESULT = new Expresion();
+            RESULT.type = "This";
+            RESULT.id = t;
+            RESULT.exists = true;
+        :}
+        |Call:c
+        {:
+            RESULT = new Expresion();
+            RESULT.value = c.value;
+            RESULT.exists = c.exists;
+            RESULT.type = "Call";
+            RESULT.dType = c.dType;
+        :}
+        |OpeningParenthesis Expr:e ClosedParenthesis
+        {:
+            RESULT = new Expresion();
+            RESULT.id = e.id;
+            RESULT.value = e.value;
+            RESULT.dType = e.dType;
+            RESULT.type = e.type;
+        :}
+        |Expr:e1 ArithmeticOperators:op Expr:e2
+        {:
+            RESULT = new Expresion();
+            switch(op){
+                case "*":
+                    if(e1.dType == e2.dType){
+                        switch(e1.dType){
+                            case "int":
+                                RESULT.value = String.valueOf(Integer.parseInt(e1.value) * Integer.parseInt(e1.value));
+                                RESULT.dType = "int";
+                                RESULT.type = "Op";
+                                break;
+                            case "double":
+                                RESULT.value = String.valueOf(Double.parseDouble(e1.value) * Double.parseDouble(e2.value));
+                                RESULT.dType = "double";
+                                RESULT.type = "Op";
+                                break;
+                            default:
+                                RESULT.value = "";
+                                RESULT.dType = null;
+                                RESULT.type = "Error";          
+                                symTable.AddError("Operación no válida para los tipos de datos ingresados.", e1left, e1right);
+                                break;
+                        }
+                    }
+                    else{
+                        if(e1.dType.equals("int") && e2.dType.equals("double")){
+                            RESULT.value =  String.valueOf(Double.parseDouble(e1.value) * Double.parseDouble(e2.value));
+                            RESULT.dType = e2.dType;
+                            RESULT.type = "Op";
+                        }
+                        else if (e1.dType.equals("double") && e2.dType.equals("int")){
+                            RESULT.value =  String.valueOf(Double.parseDouble(e1.value) * Double.parseDouble(e2.value));
+                            RESULT.dType = e1.dType;
+                            RESULT.type = "Op";
+                        } 
+                        else{
+                            RESULT.value = "";
+                            RESULT.dType = null;
+                            RESULT.type = "Error";
+                            symTable.AddError("Operación no válida para los tipos de datos ingresados.", e1left, e1right);
+                        }
+                    }
+                    break;
+                case "/":
+                    if(e1.dType == e2.dType){
+                        switch(e1.dType){
+                            case "int":
+                                RESULT.value = String.valueOf(Integer.parseInt(e1.value) % Integer.parseInt(e1.value));
+                                RESULT.dType = "int";
+                                RESULT.type = "Op";
+                                break;
+                            case "double":
+                                RESULT.value = String.valueOf(Double.parseDouble(e1.value) % Double.parseDouble(e2.value));
+                                RESULT.dType = "double";
+                                RESULT.type = "Op";
+                                break;
+                            default:
+                                RESULT.value = "";
+                                RESULT.dType = null;
+                                RESULT.type = "Error";          
+                                symTable.AddError("Operación no válida para los tipos de datos ingresados.", e1left, e1right);
+                                break;
+                        }
+                    }
+                    else{
+                        if(e1.dType.equals("int") && e2.dType.equals("double")){
+                            RESULT.value =  String.valueOf(Double.parseDouble(e1.value) % Double.parseDouble(e2.value));
+                            RESULT.dType = e2.dType;
+                            RESULT.type = "Op";
+                        }
+                        else if (e1.dType.equals("double") && e2.dType.equals("int")){
+                            RESULT.value =  String.valueOf(Double.parseDouble(e1.value) % Double.parseDouble(e2.value));
+                            RESULT.dType = e1.dType;
+                            RESULT.type = "Op";
+                        } 
+                        else{
+                            RESULT.value = "";
+                            RESULT.dType = null;
+                            RESULT.type = "Error";
+                            symTable.AddError("Operación no válida para los tipos de datos ingresados.", e1left, e1right);
+                        }
+                    }
+                    break;
+                case "%":
+                        if(e1.dType == e2.dType){
+                        switch(e1.dType){
+                            case "int":
+                                RESULT.value = String.valueOf(Integer.parseInt(e1.value) % Integer.parseInt(e1.value));
+                                RESULT.dType = "int";
+                                RESULT.type = "Op";
+                                break;
+                            case "double":
+                                RESULT.value = String.valueOf(Double.parseDouble(e1.value) % Double.parseDouble(e2.value));
+                                RESULT.dType = "double";
+                                RESULT.type = "Op";
+                                break;
+                            default:
+                                RESULT.value = "";
+                                RESULT.dType = null;
+                                RESULT.type = "Error";          
+                                symTable.AddError("Operación no válida para los tipos de datos ingresados.", e1left, e1right);
+                                break;
+                        }
+                    }
+                    else{
+                        if(e1.dType.equals("int") && e2.dType.equals("double")){
+                            RESULT.value =  String.valueOf(Double.parseDouble(e1.value) / Double.parseDouble(e2.value));
+                            RESULT.dType = e2.dType;
+                            RESULT.type = "Op";
+                        }
+                        else if (e1.dType.equals("double") && e2.dType.equals("int")){
+                            RESULT.value =  String.valueOf(Double.parseDouble(e1.value) / Double.parseDouble(e2.value));
+                            RESULT.dType = e1.dType;
+                            RESULT.type = "Op";
+                        } 
+                        else{
+                            RESULT.value = "";
+                            RESULT.dType = null;
+                            RESULT.type = "Error";
+                            symTable.AddError("Operación no válida para los tipos de datos ingresados.", e1left, e1right);
+                        }
+                    }
+                    break;
+            }
+        :}
+        |Expr:e1 sum Expr:e2
+        {:
+            RESULT = new Expresion();
+            if(e1.dType == e2.dType){
+                switch(e1.dType){
+                    case "int":
+                        RESULT.value = String.valueOf(Integer.parseInt(e1.value) + Integer.parseInt(e2.value));
+                        RESULT.dType = "int";
+                        RESULT.type = "Op";
+                        break;
+                    case "double":
+                        RESULT.value = String.valueOf(Double.parseDouble(e1.value) + Double.parseDouble(e2.value));
+                        RESULT.dType = "double";
+                        RESULT.type = "Op";
+                        break;
+                    case "string":
+                        RESULT.value = e1.value + e2.value;
+                        RESULT.dType = "string";
+                        RESULT.type = "Op";
+                        break;
+                    default:
+                        RESULT.value = "";
+                        RESULT.dType = null;
+                        RESULT.type = "Error";          
+                        symTable.AddError("Operación no válida para los tipos de datos ingresados.", e1left, e1right);
+                        break;
+                }
+            }
+            else{
+                if(e1.dType.equals("int") && e2.dType.equals("double")){
+                    RESULT.value =  String.valueOf(Double.parseDouble(e1.value) + Double.parseDouble(e2.value));
+                    RESULT.dType = e2.dType;
+                    RESULT.type = "Op";
+                }
+                else if (e1.dType.equals("double") && e2.dType.equals("int")){
+                    RESULT.value =  String.valueOf(Double.parseDouble(e1.value) + Double.parseDouble(e2.value));
+                    RESULT.dType = e1.dType;
+                    RESULT.type = "Op";
+                } 
+                else{
+                    RESULT.value = "";
+                    RESULT.dType = null;
+                    RESULT.type = "Error";
+                    symTable.AddError("Operación no válida para los tipos de datos ingresados.", e1left, e1right);
+                }
+            }
+
+        :}
+        |Expr:e1 negative Expr:e2
+        {:
+            RESULT = new Expresion();
+            if(e1.dType == e2.dType){
+                switch(e1.dType){
+                    case "int":
+                        RESULT.value = String.valueOf(Integer.parseInt(e1.value) - Integer.parseInt(e1.value));
+                        RESULT.dType = "int";
+                        RESULT.type = "Op";
+                        break;
+                    case "double":
+                        RESULT.value = String.valueOf(Double.parseDouble(e1.value) - Double.parseDouble(e2.value));
+                        RESULT.dType = "double";
+                        RESULT.type = "Op";
+                        break;
+                    default:
+                        RESULT.value = "";
+                        RESULT.dType = null;
+                        RESULT.type = "Error";          
+                        symTable.AddError("Operación no válida para los tipos de datos ingresados.", e1left, e1right);
+                        break;
+                }
+            }
+            else{
+                if(e1.dType.equals("int") && e2.dType.equals("double")){
+                    RESULT.value =  String.valueOf(Double.parseDouble(e1.value) - Double.parseDouble(e2.value));
+                    RESULT.dType = e2.dType;
+                    RESULT.type = "Op";
+                }
+                else if (e1.dType.equals("double") && e2.dType.equals("int")){
+                    RESULT.value =  String.valueOf(Double.parseDouble(e1.value) - Double.parseDouble(e2.value));
+                    RESULT.dType = e1.dType;
+                    RESULT.type = "Op";
+                } 
+                else{
+                    RESULT.value = "";
+                    RESULT.dType = null;
+                    RESULT.type = "Error";
+                    symTable.AddError("Operación no válida para los tipos de datos ingresados.", e1left, e1right);
+                }
+            }
+        :}
+        |Expr:e1 and:a Expr:e2
+        {:
+            RESULT = new Expresion();
+
+            if(e1.dType.equals("bool") && e2.dType.equals("bool")){
+                RESULT.value =  String.valueOf(Boolean.parseBoolean(e1.value) && Boolean.parseBoolean(e2.value));
+                RESULT.type = "boolean";
+                RESULT.dType = "bool";   
+            }
+            else{
+                symTable.AddError("Expresion no valida, tipo de dato no booleano.", e1left, e1right);
+            }
+
+        :} 
+        |Expr:e1 or Expr:e2
+        {:
+            RESULT = new Expresion();
+            if(e1.dType.equals("bool") && e2.dType.equals("bool")){
+                RESULT.value =  String.valueOf(Boolean.parseBoolean(e1.value) || Boolean.parseBoolean(e2.value));
+                RESULT.type = "boolean";
+                RESULT.dType = "bool";   
+            }
+            else{
+                symTable.AddError("Expresion no valida, tipo de dato no booleano.", e1left, e1right);
+            }
+        :}
+        |Expr:e1 equality:op Expr:e2
+        {:
+            RESULT = new Expresion();
+            switch(op){
+                case "==":
+                    if(e1.dType.equals("bool") && e2.dType.equals("bool")){
+                        RESULT.value =  String.valueOf(Boolean.parseBoolean(e1.value) == Boolean.parseBoolean(e2.value));
+                        RESULT.type = "boolean";
+                        RESULT.dType = "bool"; 
+                        RESULT.exists = true;  
+                    }
+                    else if(e1.dType.equals("int") && e2.dType.equals("int")){
+                        RESULT.value =  String.valueOf(Integer.parseInt(e1.value) == Integer.parseInt(e2.value));
+                        RESULT.type = "boolean";
+                        RESULT.dType = "bool";
+                        RESULT.exists = true; 
+                    }
+                    else if(e1.dType.equals("double") && e2.dType.equals("double")){
+                        RESULT.value =  String.valueOf(Double.parseDouble(e1.value) == Double.parseDouble(e2.value));
+                        RESULT.type = "boolean";
+                        RESULT.dType = "bool";
+                        RESULT.exists = true; 
+                    }
+                    else if(e1.dType.equals("int") && e2.dType.equals("double")){
+                        RESULT.value =  String.valueOf(Double.parseDouble(e1.value) == Double.parseDouble(e2.value));
+                        RESULT.type = "boolean";
+                        RESULT.dType = "bool";
+                        RESULT.exists = true; 
+                    }
+                    else if(e1.dType.equals("double") && e2.dType.equals("int")){
+                        RESULT.value =  String.valueOf(Double.parseDouble(e1.value) == Double.parseDouble(e2.value));
+                        RESULT.type = "boolean";
+                        RESULT.dType = "bool";
+                        RESULT.exists = true; 
+                    }
+                    else{
+                        symTable.AddError("Expresion no valida, tipo de dato no booleano.", e1left, e1right);
+                    }
+                    break;
+                case "!=":
+                    if(e1.dType.equals("bool") && e2.dType.equals("bool")){
+                        RESULT.value =  String.valueOf(Boolean.parseBoolean(e1.value) != Boolean.parseBoolean(e2.value));
+                        RESULT.type = "boolean";
+                        RESULT.dType = "bool";
+                        RESULT.exists = true;    
+                    }
+                    else if(e1.dType.equals("int") && e2.dType.equals("int")){
+                        RESULT.value =  String.valueOf(Integer.parseInt(e1.value) != Integer.parseInt(e2.value));
+                        RESULT.type = "boolean";
+                        RESULT.dType = "bool";
+                        RESULT.exists = true; 
+                    }
+                    else if(e1.dType.equals("double") && e2.dType.equals("double")){
+                        RESULT.value =  String.valueOf(Double.parseDouble(e1.value) != Double.parseDouble(e2.value));
+                        RESULT.type = "boolean";
+                        RESULT.dType = "bool";
+                        RESULT.exists = true; 
+                    }
+                    else if(e1.dType.equals("int") && e2.dType.equals("double")){
+                        RESULT.value =  String.valueOf(Double.parseDouble(e1.value) != Double.parseDouble(e2.value));
+                        RESULT.type = "boolean";
+                        RESULT.dType = "bool";
+                        RESULT.exists = true; 
+                    }
+                    else if(e1.dType.equals("double") && e2.dType.equals("int")){
+                        RESULT.value =  String.valueOf(Double.parseDouble(e1.value) != Double.parseDouble(e2.value));
+                        RESULT.type = "boolean";
+                        RESULT.dType = "bool";
+                        RESULT.exists = true; 
+                    }
+                    else{
+                        symTable.AddError("Expresion no valida, tipo de dato no booleano.", e1left, e1right);
+                    }
+                    break;
+            }       
+        :}
+        |Expr:e1 ComparisonOperators:op Expr:e2
+        {:
+            RESULT = new Expresion();
+            switch(op){
+                case ">=":
+                    if(e1.dType.equals("int") && e2.dType.equals("int")){
+                        RESULT.value =  String.valueOf(Integer.parseInt(e1.value) >= Integer.parseInt(e2.value));
+                        RESULT.type = "boolean";
+                        RESULT.dType = "bool";
+                        RESULT.exists = true;    
+                    }else if(e1.dType.equals("double") && e2.dType.equals("double")){
+                        RESULT.value =  String.valueOf(Double.parseDouble(e1.value) >= Double.parseDouble(e2.value));
+                        RESULT.type = "boolean";
+                        RESULT.dType = "bool";
+                        RESULT.exists = true;   
+                    }else if(e1.dType.equals("int") && e2.dType.equals("double")){
+                        RESULT.value =  String.valueOf(Double.parseDouble(e1.value) >= Double.parseDouble(e2.value));
+                        RESULT.type = "boolean";
+                        RESULT.dType = "bool"; 
+                        RESULT.exists = true;  
+                    }
+                    else if(e1.dType.equals("double") && e2.dType.equals("int")){
+                        RESULT.value =  String.valueOf(Double.parseDouble(e1.value) >= Double.parseDouble(e2.value));
+                        RESULT.type = "boolean";
+                        RESULT.dType = "bool";
+                        RESULT.exists = true; 
+                    }
+                    else{
+                        symTable.AddError("Expresion no valida, los tipos de datos no son correctos para comparar.", e1left, e1right);
+                    }
+                    break;
+                case "<=":
+                    if(e1.dType.equals("int") && e2.dType.equals("int")){
+                        RESULT.value =  String.valueOf(Integer.parseInt(e1.value) <= Integer.parseInt(e2.value));
+                        RESULT.type = "boolean";
+                        RESULT.dType = "bool";
+                        RESULT.exists = true;    
+                    }else if(e1.dType.equals("double") && e2.dType.equals("double")){
+                        RESULT.value =  String.valueOf(Double.parseDouble(e1.value) <= Double.parseDouble(e2.value));
+                        RESULT.type = "boolean";
+                        RESULT.dType = "bool"; 
+                        RESULT.exists = true;  
+                    }else if(e1.dType.equals("int") && e2.dType.equals("double")){
+                        RESULT.value =  String.valueOf(Double.parseDouble(e1.value) <= Double.parseDouble(e2.value));
+                        RESULT.type = "boolean";
+                        RESULT.dType = "bool";
+                        RESULT.exists = true;   
+                    }
+                    else if(e1.dType.equals("double") && e2.dType.equals("int")){
+                        RESULT.value =  String.valueOf(Double.parseDouble(e1.value) <= Double.parseDouble(e2.value));
+                        RESULT.type = "boolean";
+                        RESULT.dType = "bool";
+                        RESULT.exists = true; 
+                    }
+                    else{
+                        symTable.AddError("Expresion no valida, los tipos de datos no son correctos para comparar.", e1left, e1right);
+                    }
+                    break;
+            }    
+        :}
+        |Expr:e1 LessThanSign Expr:e2
+        {:
+            RESULT = new Expresion();
+            if(e1.dType.equals("int") && e2.dType.equals("int")){
+                RESULT.value =  String.valueOf(Integer.parseInt(e1.value) < Integer.parseInt(e2.value));
+                RESULT.type = "boolean";
+                RESULT.dType = "bool";
+                RESULT.exists = true;    
+            }else if(e1.dType.equals("double") && e2.dType.equals("double")){
+                RESULT.value =  String.valueOf(Double.parseDouble(e1.value) < Double.parseDouble(e2.value));
+                RESULT.type = "boolean";
+                RESULT.dType = "bool";
+                RESULT.exists = true;   
+            }else if(e1.dType.equals("int") && e2.dType.equals("double")){
+                RESULT.value =  String.valueOf(Double.parseDouble(e1.value) < Double.parseDouble(e2.value));
+                RESULT.type = "boolean";
+                RESULT.dType = "bool"; 
+                RESULT.exists = true;  
+            }
+            else if(e1.dType.equals("double") && e2.dType.equals("int")){
+                RESULT.value =  String.valueOf(Double.parseDouble(e1.value) < Double.parseDouble(e2.value));
+                RESULT.type = "boolean";
+                RESULT.dType = "bool";
+                RESULT.exists = true; 
+            }
+            else{
+                symTable.AddError("Expresion no valida, los tipos de datos no son correctos para comparar.", e1left, e1right);
+            }
+        :}
+        |Expr:e1 GreaterThanSign Expr:e2
+        {:
+            RESULT = new Expresion();
+            if(e1.dType.equals("int") && e2.dType.equals("int")){
+                RESULT.value =  String.valueOf(Integer.parseInt(e1.value) > Integer.parseInt(e2.value));
+                RESULT.type = "boolean";
+                RESULT.dType = "bool"; 
+                RESULT.exists = true;   
+            }else if(e1.dType.equals("double") && e2.dType.equals("double")){
+                RESULT.value =  String.valueOf(Double.parseDouble(e1.value) > Double.parseDouble(e2.value));
+                RESULT.type = "boolean";
+                RESULT.dType = "bool";  
+            }else if(e1.dType.equals("int") && e2.dType.equals("double")){
+                RESULT.value =  String.valueOf(Double.parseDouble(e1.value) > Double.parseDouble(e2.value));
+                RESULT.type = "boolean";
+                RESULT.dType = "bool";
+                RESULT.exists = true;   
+            }
+            else if(e1.dType.equals("double") && e2.dType.equals("int")){
+                RESULT.value =  String.valueOf(Double.parseDouble(e1.value) > Double.parseDouble(e2.value));
+                RESULT.type = "boolean";
+                RESULT.dType = "bool";
+                RESULT.exists = true; 
+            }
+            else{
+                symTable.AddError("Expresion no valida, los tipos de datos no son correctos para comparar.", e1left, e1right);
+            }
+        :}
+        |negative Expr:e 
+        {:
+            RESULT = new Expresion();
+            switch(e.dType){
+                case "int":
+                    RESULT.value = String.valueOf(Integer.parseInt(e.value) * -1);
+                    RESULT.dType = "int";
+                    RESULT.type = "Op";
+                    RESULT.exists = true; 
+                    break;
+                case "double":
+                    RESULT.value = String.valueOf(Double.parseDouble(e.value) * -1);
+                    RESULT.dType = "double";
+                    RESULT.type = "Op"; 
+                    RESULT.exists = true;               
+                    break;
+                default:
+                    symTable.AddError("Operación no válida para los tipos de datos ingresados.", eleft, eright);
+                    break;
+            }
+        :}
+        |denial:d Expr:e 
+        {:
+            RESULT = new Expresion();
+            if(e.dType.equals("bool")){
+                RESULT.value = String.valueOf(!(Boolean.parseBoolean(e.value)));
+                RESULT.type = "boolean";
+                RESULT.dType = "bool";
+                RESULT.exists = true; 
+            }else{
+                symTable.AddError("No se puede negar un valor no booleano.", dleft, dright);
+            }
+        :}
         |sNew OpeningParenthesis ident ClosedParenthesis
-        |sNewArray OpeningParenthesis Expr comma Type ClosedParenthesis
+        |sNewArray OpeningParenthesis Expr:e comma Type:t ClosedParenthesis
+        {:
+            RESULT = new Expresion();
+            RESULT.value = null;
+            RESULT.type = "Array";
+            RESULT.dType = t;
+            RESULT.exists = true; 
+        :}
         |sReadInteger OpeningParenthesis ClosedParenthesis
         |sReadInteger Parenthesis
         |sReadLine Parenthesis
         |sReadLine OpeningParenthesis ClosedParenthesis
         |sMalloc OpeningParenthesis Expr ClosedParenthesis;
 
-LValue ::= ident
-           |Expr dot ident
-           |Expr OpeningBracket Expr ClosedBracket;
+LValue ::=  ident:id 
+            {:
+                RESULT = new Expresion();
 
-Call ::= ident OpeningParenthesis Actuals ClosedParenthesis
+                if(symTable.VerifyElement(id)){
+                    int ambit = symTable.GetAmbito(id);
+                    RESULT.id = id;
+                    RESULT.type = symTable.GetTypeClassToElement(id, ambit);
+                    RESULT.dType = symTable.GetTypeToElement(id, ambit);
+                    RESULT.value = symTable.GetValueToElement(id, ambit);
+                    RESULT.ambit = symTable.GetLocalAmbit(id, ambit);
+                    RESULT.exists = true;
+                }             
+                else{
+                    RESULT.exists = false;
+                }
+            :}
+           |Expr:e dot ident:id
+           {:
+                RESULT = new Expresion();
+                if(symTable.VerifyElement(e.id + "." + id)){
+                    int ambit = symTable.GetAmbito(e.id + "." + id);
+                    RESULT.id = e.id + "." + id;
+                    RESULT.type = symTable.GetTypeClassToElement(e.id + "." + id, ambit);
+                    RESULT.dType = symTable.GetTypeToElement(e.id + "." + id, ambit);
+                    RESULT.value = symTable.GetValueToElement(e.id + "." + id, ambit);
+                    RESULT.ambit = symTable.GetLocalAmbit(e.id + "." + id, ambit);
+                    RESULT.exists = true;
+                }             
+                else{
+                    RESULT.exists = false;
+                }
+           :}
+           |Expr:e1 OpeningBracket Expr:e2 ClosedBracket
+           {:
+                RESULT = new Expresion();
+                if(symTable.VerifyElement(e1.id)){
+                    int ambit = symTable.GetAmbito(e1.id);
+                    RESULT.type = symTable.GetTypeClassToElement(e1.id, ambit);
+                    RESULT.dType = symTable.GetTypeToElement(e1.id, ambit);
+                    RESULT.value = symTable.GetValueToElement(e1.id, ambit);
+                    RESULT.ambit = symTable.GetLocalAmbit(e1.id, ambit);
+                    RESULT.exists = true;
+                }             
+                else{
+                    RESULT.exists = false;
+                }
+           :}
+           ;
+
+Call ::= ident:id OpeningParenthesis Actuals ClosedParenthesis 
+        {:
+
+        :}
         |ident Parenthesis
+        {:
+
+        :}
         |Expr dot ident OpeningParenthesis Actuals ClosedParenthesis
         |Expr dot ident Parenthesis
         |Expr dot LibCall OpeningParenthesis Actuals ClosedParenthesis
@@ -162,8 +960,44 @@ LibCall ::= sGetByte OpeningParenthesis Expr ClosedParenthesis
 Actuals ::= Expr ExprRepeat| /* epsilon */ ;
 
 //Constant ::= intConstant | doubleConstant | boolConstant | stringConstant | null
-Constant ::= integerConstant
-            |doubleConstant 
-            |boolConstant 
-            |stringConstant 
-            |sNull;
+Constant ::= integerConstant:num
+            {:
+                RESULT = new Expresion();
+                RESULT.value = num;
+                RESULT.type = "Nums";
+                RESULT.dType = "int";
+                RESULT.exists = true;
+            :}
+            |doubleConstant:num
+            {:
+                RESULT = new Expresion();
+                RESULT.value = num;
+                RESULT.type = "Nums";
+                RESULT.dType = "double";
+                RESULT.exists = true;
+            :}
+            |boolConstant:val
+            {:
+                RESULT = new Expresion();
+                RESULT.value = val;
+                RESULT.type = "boolean";
+                RESULT.dType = "bool";
+                RESULT.exists = true;
+            :} 
+            |stringConstant:cadena
+            {:
+                RESULT = new Expresion();
+                RESULT.value = cadena;
+                RESULT.type = "string";
+                RESULT.dType = "string";
+                RESULT.exists = true;
+            :}
+            |sNull:n
+            {:
+                RESULT = new Expresion();
+                RESULT.value = n;
+                RESULT.type = "Nulo";
+                RESULT.dType = "null";
+                RESULT.exists = true;
+            :}
+            ;

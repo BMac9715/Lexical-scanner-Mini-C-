@@ -342,6 +342,7 @@ public class GraphicInterface extends javax.swing.JFrame {
         
         ArrayList<Yytoken> lexicalErrors = null;
         ArrayList<String> syntacticErrors = null;
+        ArrayList<String> semanticErrors = null;
         boolean lexErrors = false;
         
         BufferedReader reader = null;
@@ -354,6 +355,7 @@ public class GraphicInterface extends javax.swing.JFrame {
             
             lexicalErrors = lexer.tokens;
             syntacticErrors = parser.SyntacticErrors;
+            semanticErrors = parser.action_obj.symTable.getErrors();
             
             reader.close();
             
@@ -373,13 +375,20 @@ public class GraphicInterface extends javax.swing.JFrame {
                 content += element + "\r\n";
             }
             
-            if((!lexErrors) &&(syntacticErrors.isEmpty())){
+            //Errores generales
+            for(String element: semanticErrors){
+                content += element + "\r\n";
+            }
+            
+            parser.action_obj.symTable.CrearLog("C:\\Users\\bryan\\Documents\\FileOutput1.out");
+            
+            if((!lexErrors) &&(syntacticErrors.isEmpty()) && (semanticErrors.isEmpty())){
                 content = "*** Archivo sin errores léxicos o sintácticos ***";
                 tAFileOut.setForeground(Color.GREEN);
                 tAFileOut.setText(content);      
                 tAFileOut.setCaretPosition(0);
                 btnAnalize.setEnabled(false);
-                
+                            
                 JOptionPane.showMessageDialog(null,
                 "El archivo analizado es léxicamente y sintácticamente correcto.",
                 "Aviso",JOptionPane.INFORMATION_MESSAGE);       

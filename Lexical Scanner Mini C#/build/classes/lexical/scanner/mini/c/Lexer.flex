@@ -118,6 +118,8 @@ GetByte = ("GetByte")
 SetByte = ("SetByte")
 Return = ("return")
 Break = ("break")
+Include = ("include")
+Constante = ("const")
 
 /* Identifiers */
 Identifiers = [a-zA-Z]([a-zA-Z0-9_])*
@@ -161,7 +163,9 @@ UnrecognizedCharacters = (\")
 ArithmeticOperators = ("*")|("/")|("%")
 SumOperator = ("+")
 NegativeOperator = ("-")
-ComparisonOperators = ("<")|("<=")|(">")|(">=")
+ComparisonOperators = ("<=")|(">=")
+LessThanSign = ("<")
+GreaterThanSign = (">")
 EqualityOperators = ("==")|("!=")
 LogicalAnd = ("&&")
 LogicalOr = ("||")
@@ -181,6 +185,7 @@ CurlyBrackets = ("{}")
 Semicolon = (";")
 Comma = (",")
 Dot= (".")
+PoundSign = ("#")
 
 %%
 
@@ -213,6 +218,8 @@ Dot= (".")
 {SetByte}                   {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return symbol(sym.sSetByte);}
 {Return}                    {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return symbol(sym.sReturn);}
 {Break}                     {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return symbol(sym.sBreak);}
+{Include}                   {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return symbol(sym.sInclude);}
+{Constante}                 {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeReservedWords(yytext()), false)); return symbol(sym.sConst);}
 /*  Constants   */
 {LogicalConstants}          {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "T_LogicalConstant", false)); return symbol(sym.boolConstant);}
 {IntegerConstants}          {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeNumbers(yytext(), "T_IntConstant"), false)); return symbol(sym.integerConstant);}
@@ -220,6 +227,8 @@ Dot= (".")
 {StringConstants}           {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, this.typeNumbers(yytext(), "T_String"), false)); return symbol(sym.stringConstant);}
 {ArithmeticOperators}       {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return symbol(sym.ArithmeticOperators);}
 {ComparisonOperators}       {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return symbol(sym.ComparisonOperators);}
+{LessThanSign}              {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return symbol(sym.LessThanSign);}
+{GreaterThanSign}           {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return symbol(sym.GreaterThanSign);}
 {SumOperator}               {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return symbol(sym.sum);}
 {NegativeOperator}          {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return symbol(sym.negative);}
 {EqualityOperators}         {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return symbol(sym.equality);}
@@ -239,6 +248,7 @@ Dot= (".")
 {Semicolon}                 {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return symbol(sym.pyc);}
 {Comma}                     {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return symbol(sym.comma);}
 {Dot}                       {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return symbol(sym.dot);}
+{PoundSign}                 {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "\'"+ yytext()+"\'", false)); return symbol(sym.PoundSign);}
 /*  Identifiers  */
 {Identifiers}               {this.tokens.add(new Yytoken(yytext(), yyline, yycolumn, "T_Identifier", false)); return symbol(sym.ident);}
 {WhiteSpace}                { /* ignore */ }
